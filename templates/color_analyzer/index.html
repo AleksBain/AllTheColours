@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+
+{% block title %}Color Season - Analiza Typu Kolorystycznego{% endblock %}
+
+{% block extra_css %}
+<style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 0;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-card {
+            transition: transform 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: 100%;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .color-palette {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .color-sample {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stats-counter {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .btn-primary-custom {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4">
+                        Odkryj swój typ kolorystyczny
+                    </h1>
+                    <p class="lead mb-4">
+                        Przesyłaj zdjęcia swojej skóry, włosów i oczu, a nasza aplikacja automatycznie określi 
+                        Twój typ kolorystyczny i wygeneruje spersonalizowaną paletę kolorów.
+                    </p>
+                    <div class="color-palette">
+                        <div class="color-sample" style="background-color: #FF6B6B;"></div>
+                        <div class="color-sample" style="background-color: #4ECDC4;"></div>
+                        <div class="color-sample" style="background-color: #45B7D1;"></div>
+                        <div class="color-sample" style="background-color: #96CEB4;"></div>
+                        <div class="color-sample" style="background-color: #FECA57;"></div>
+                    </div>
+                    <div class="mt-4">
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'color_analyzer:nowa_analiza' %}" class="btn btn-primary-custom btn-lg me-3">
+                                <i class="fas fa-camera me-2"></i>Rozpocznij analizę
+                            </a>
+                            <a href="{% url 'color_analyzer:historia_analiz' %}" class="btn btn-outline-light btn-lg">
+                                <i class="fas fa-history me-2"></i>Moje analizy
+                            </a>
+                        {% else %}
+                            <a href="{% url 'color_analyzer:rejestracja' %}" class="btn btn-primary-custom btn-lg me-3">
+                                <i class="fas fa-user-plus me-2"></i>Załóż konto
+                            </a>
+                            <a href="{% url 'color_analyzer:login' %}" class="btn btn-outline-light btn-lg">
+                                <i class="fas fa-sign-in-alt me-2"></i>Zaloguj się
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <i class="fas fa-palette" style="font-size: 12rem; opacity: 0.1;"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row text-center mb-5">
+                <div class="col-12">
+                    <h2 class="display-5 fw-bold mb-3">Jak to działa?</h2>
+                    <p class="lead text-muted">Prosty proces w trzech krokach</p>
+                </div>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card feature-card text-center p-4">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fas fa-image text-primary" style="font-size: 3rem;"></i>
+                            </div>
+                            <h5 class="card-title">1. Prześlij zdjęcia</h5>
+                            <p class="card-text">
+                                Przesyłaj zdjęcia swojego nadgarstka, włosów i oczu w dobrym oświetleniu
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card feature-card text-center p-4">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fas fa-cogs text-primary" style="font-size: 3rem;"></i>
+                            </div>
+                            <h5 class="card-title">2. Analiza AI</h5>
+                            <p class="card-text">
+                                Nasz algorytm analizuje tonację, nasycenie i kontrast Twojej pigmentacji
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card feature-card text-center p-4">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fas fa-file-pdf text-primary" style="font-size: 3rem;"></i>
+                            </div>
+                            <h5 class="card-title">3. Otrzymaj raport</h5>
+                            <p class="card-text">
+                                Pobierz spersonalizowany raport PDF z paletą kolorów i poradami stylistycznymi
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="bg-light py-5">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <div class="stats-counter" id="users-count" data-count="{{ total_users }}">{{ total_users }}</div>
+                    <p class="text-muted">Zadowolonych użytkowników</p>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-counter" id="analyses-count" data-count="{{ total_analiz }}">{{ total_analiz }}</div>
+                    <p class="text-muted">Wykonanych analiz</p>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-counter" id="colors-count" data-count="{{ total_types }}">{{ total_types }}</div>
+                    <p class="text-muted">Typów kolorystycznych</p>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-counter" id="accuracy-count">94%</div>
+                    <p class="text-muted">Dokładność analizy</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Color Types Preview -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row text-center mb-5">
+                <div class="col-12">
+                    <h2 class="display-5 fw-bold mb-3">Typy kolorystyczne</h2>
+                    <p class="lead text-muted">Odkryj, do której grupy należysz</p>
+                </div>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="card feature-card">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">Wiosna</h6>
+                            <div class="color-palette justify-content-center">
+                                <div class="color-sample" style="background-color: #FFE135; width: 25px; height: 25px;"></div>
+                                <div class="color-sample" style="background-color: #FF6B35; width: 25px; height: 25px;"></div>
+                                <div class="color-sample" style="background-color: #7FB069; width: 25px; height: 25px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card feature-card">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">Lato</h6>
+                            <div class="color-palette justify-content-center">
+                                <div class="color-sample" style="background-color: #A8DADC; width: 25px; height: 25px;"></div>
+                                <div class="color-sample" style="background-color: #F1FAEE; width: 25px; height: 25px;"></div>
+                                <div class="color-sample" style="background-color: #E63946; width: 25px; height: 25px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card feature-card">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">Jesień</h6>
+                            <div class="color-palette justify-content-center">
+                                <div class="color-sample" style="background-color: #8B4513; width: 25px; height: 25px;"></div>
+                                <div class="color-sample" style="background-color: #D2691E; width: 25px; height: 25px;"></div>
+                                <div class="color-sample" style="background-color: #228B22; width: 25px; height: 25px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card feature-card">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">Zima</h6>
+                            <div class="color-palette justify-content-center">
+                                <div class="color-sample" style="background-color: #000080; width: 25px; height: 25px;"></div>
+                                <div class="color-sample" style="background-color: #800080; width: 25px; height: 25px;"></div>
+                                <div class="color-sample" style="background-color: #DC143C; width: 25px; height: 25px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="{% url 'color_analyzer:typy_kolorystyczne' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-eye me-2"></i>Zobacz wszystkie typy
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        // Counter animation
+        function animateCounter(elementId, targetValue, duration = 2000) {
+            const element = document.getElementById(elementId);
+            const startValue = 0;
+            const increment = targetValue / (duration / 16);
+            let currentValue = startValue;
+            
+            const timer = setInterval(() => {
+                currentValue += increment;
+                if (currentValue >= targetValue) {
+                    element.textContent = targetValue.toLocaleString();
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(currentValue).toLocaleString();
+                }
+            }, 16);
+        }
+        
+        // Start counter animation when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+        animateCounter('users-count', parseInt(document.getElementById('users-count').dataset.count));
+        animateCounter('analyses-count', parseInt(document.getElementById('analyses-count').dataset.count));
+        animateCounter('colors-count', parseInt(document.getElementById('colors-count').dataset.count));
+});
+            
+            // Special handling for percentage
+            const accuracyElement = document.getElementById('accuracy-count');
+            let currentAccuracy = 0;
+            const accuracyTimer = setInterval(() => {
+                currentAccuracy += 1;
+                if (currentAccuracy >= 94) {
+                    accuracyElement.textContent = '94%';
+                    clearInterval(accuracyTimer);
+                } else {
+                    accuracyElement.textContent = currentAccuracy + '%';
+                }
+            }, 20);
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+{% endblock %}

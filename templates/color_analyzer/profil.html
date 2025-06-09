@@ -1,0 +1,41 @@
+<!-- filepath: /Users/aleksandra_bainczyk/Zajęcia_Django/color_season/templates/color_analyzer/profil.html -->
+{% extends "base.html" %}
+{% block title %}Twój profil{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Twój profil</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ request.user.username }}</h5>
+                    <p class="card-text"><strong>Email:</strong> {{ request.user.email }}</p>
+                    <p class="card-text"><strong>Data rejestracji:</strong> {{ request.user.date_joined|date:"d.m.Y" }}</p>
+                    <p class="card-text"><strong>Wiek:</strong> {{ profil.wiek|default:"-" }}</p>
+                    <p class="card-text"><strong>Płeć:</strong> {{ profil.get_plec_display|default:"-" }}</p>
+                    <p class="card-text"><strong>Ulubiony typ:</strong> {{ profil.ulubiony_typ.get_nazwa_display|default:"-" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

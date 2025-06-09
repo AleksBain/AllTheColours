@@ -1,0 +1,18 @@
+<!-- filepath: /Users/aleksandra_bainczyk/Zajęcia_Django/color_season/templates/color_analyzer/szczegoly_analizy.html -->
+{% extends "base.html" %}
+{% block title %}Szczegóły analizy{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Szczegóły analizy</h2>
+    <ul>
+        <li>Status: {{ analiza.get_status_display }}</li>
+        <li>Typ kolorystyczny: {{ analiza.typ_kolorystyczny }}</li>
+        <li>Tonacja skóry: {{ analiza.tonacja_skory }}</li>
+        <li>Kontrast: {{ analiza.kontrast_poziom }}</li>
+        <li>Nasycenie: {{ analiza.nasycenie_poziom }}</li>
+        <li>Pewność wyniku: {{ analiza.pewnosc_wyniku }}</li>
+        <li>Notatki: {{ analiza.notatki }}</li>
+    </ul>
+    <a href="{% url 'color_analyzer:historia_analiz' %}" class="btn btn-secondary">Powrót do historii</a>
+</div>
+{% endblock %}

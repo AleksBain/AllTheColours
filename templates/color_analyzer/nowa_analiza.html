@@ -4,6 +4,7 @@
 {% block title %}Nowa Analiza Kolorystyczna{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
 <style>
     .upload-section {
         background: #f8f9fa;
@@ -13,6 +14,7 @@
         text-align: center;
         margin-bottom: 1.5rem;
         transition: all 0.3s ease;
+        cursor: pointer;
     }
     
     .upload-section:hover {
@@ -82,10 +84,33 @@
         display: none;
         margin-top: 1rem;
     }
+
+    .cropper-controls {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    padding: 8px;
+    margin: 10px 0;
+}
+
+.cropper-controls .btn {
+    margin: 0 2px;
+    min-width: 40px;
+}
+
+.crop-btn.btn-outline-success {
+    border-color: #28a745;
+    color: #28a745;
+}
 </style>
 {% endblock %}
 
 {% block content %}
+<head>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+    </head>
+
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-lg-8">
@@ -122,15 +147,23 @@
                         <div class="file-info">
                             Maksymalny rozmiar: 5MB | Dozwolone formaty: JPG, PNG, GIF
                         </div>
+
                         <div class="preview-container">
                             <img class="preview-image" alt="Podgląd">
                         </div>
+
+                        <div class="text-center mt-2">
+                            <button type="button" class="btn btn-outline-primary crop-btn">Przytnij</button>
+                        </div>
+                        <input type="hidden" class="cropped-data" name="cropped_{{ form.zdjecie_nadgarstka.name }}">
+
                         <div class="progress-container">
                             <div class="progress">
                                 <div class="progress-bar" role="progressbar" style="width: 0%"></div>
                             </div>
                         </div>
                     </div>
+
                     {% if form.zdjecie_nadgarstka.errors %}
                         <div class="text-danger mt-2">
                             {% for error in form.zdjecie_nadgarstka.errors %}
@@ -159,12 +192,19 @@
                         <div class="preview-container">
                             <img class="preview-image" alt="Podgląd">
                         </div>
+
+                        <div class="text-center mt-2">
+                            <button type="button" class="btn btn-outline-primary crop-btn">Przytnij</button>
+                        </div>
+                        <input type="hidden" class="cropped-data" name="cropped_{{ form.zdjecie_oczu.name }}">
+
                         <div class="progress-container">
                             <div class="progress">
                                 <div class="progress-bar" role="progressbar" style="width: 0%"></div>
                             </div>
                         </div>
                     </div>
+
                     {% if form.zdjecie_oczu.errors %}
                         <div class="text-danger mt-2">
                             {% for error in form.zdjecie_oczu.errors %}
@@ -193,12 +233,19 @@
                         <div class="preview-container">
                             <img class="preview-image" alt="Podgląd">
                         </div>
+
+                        <div class="text-center mt-2">
+                            <button type="button" class="btn btn-outline-primary crop-btn">Przytnij</button>
+                        </div>
+                        <input type="hidden" class="cropped-data" name="cropped_{{ form.zdjecie_wlosow.name }}">
+
                         <div class="progress-container">
                             <div class="progress">
                                 <div class="progress-bar" role="progressbar" style="width: 0%"></div>
                             </div>
                         </div>
                     </div>
+
                     {% if form.zdjecie_wlosow.errors %}
                         <div class="text-danger mt-2">
                             {% for error in form.zdjecie_wlosow.errors %}
@@ -208,8 +255,6 @@
                     {% endif %}
                 </div>
 
-                
-
                 <!-- Przyciski -->
                 <div class="form-section text-center">
                     <button type="submit" class="btn btn-primary btn-lg me-3">
@@ -217,134 +262,384 @@
                         Wyślij do analizy
                     </button>
                     <a href="{% url 'color_analyzer:historia_analiz' %}" class="btn btn-secondary btn-lg">
-                        <i class="fas fa-arrow-left me-2"></i>
-                        Anuluj
+                        <i class="fas fa-history me-2"></i>
+                        Historia Analiz
                     </a>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-<!-- Instrukcje pomocne -->
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-12">
-            <div class="card bg-light">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-info-circle text-info me-2"></i>
-                        Wskazówki do zdjęć
-                    </h5>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <h6><i class="fas fa-hand-paper text-primary me-2"></i>Nadgarstek</h6>
-                            <ul class="small">
-                                <li>Wnętrze nadgarstka lub przedramienia</li>
-                                <li>Naturalne światło (przy oknie)</li>
-                                <li>Bez biżuterii i makijażu</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-4">
-                            <h6><i class="fas fa-eye text-primary me-2"></i>Oczy</h6>
-                            <ul class="small">
-                                <li>Zbliżenie na obszar oczu</li>
-                                <li>Bez makijażu</li>
-                                <li>Dobre oświetlenie</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-4">
-                            <h6><i class="fas fa-cut text-primary me-2"></i>Włosy</h6>
-                            <ul class="small">
-                                <li>Naturalne światło</li>
-                                <li>Bez filtrów</li>
-                                <li>Widoczny naturalny kolor</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}
 
-{% block extra_js %}
+{% block extra_js %}  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Drag and drop functionality
-    const uploadSections = document.querySelectorAll('.upload-section');
+document.addEventListener('DOMContentLoaded', function () {
     
-    uploadSections.forEach(section => {
+    const activeCroppers = new Map();
+
+    document.querySelectorAll('.upload-section').forEach(section => {
         const input = section.querySelector('input[type="file"]');
-        const preview = section.querySelector('.preview-image');
         const previewContainer = section.querySelector('.preview-container');
+        const preview = section.querySelector('.preview-image');
+        const cropBtn = section.querySelector('.crop-btn');
+        const hiddenInput = section.querySelector('.cropped-data');
+        const fieldName = section.dataset.field;
+
         
-        // Click to upload
-        section.addEventListener('click', (e) => {
-            if (e.target !== input) {
-                input.click();
+        activeCroppers.set(fieldName, {
+            cropper: null,
+            isInitialized: false
+        });
+
+       
+        input.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                alert('Proszę wybrać plik obrazu.');
+                return;
+            }
+
+            section.style.borderColor = '#dee2e6';
+
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                preview.src = event.target.result;
+                previewContainer.style.display = 'block';
+
+                const sectionData = activeCroppers.get(fieldName);
+                if (sectionData && sectionData.cropper) {
+                    sectionData.cropper.destroy();
+                    console.log(`Destroyed existing cropper for ${fieldName}`);
+                }
+
+                activeCroppers.set(fieldName, {
+                    cropper: null,
+                    isInitialized: false
+                });
+
+
+                preview.onload = function() {
+                    console.log(`Image loaded for ${fieldName}, initializing cropper...`);
+                    
+                    if (typeof Cropper === 'undefined') {
+                        console.error('Cropper.js library is not loaded!');
+                        alert('Biblioteka Cropper.js nie jest załadowana. Sprawdź czy skrypt jest poprawnie dołączony do strony.');
+                        return;
+                    }
+                    
+
+                    if (!preview.complete || preview.naturalWidth === 0) {
+                        console.log('Image not fully loaded, waiting...');
+                        setTimeout(() => preview.onload(), 100);
+                        return;
+                    }
+                    
+                    try {
+                        console.log(`Creating cropper for ${fieldName}...`);
+                        
+                        setTimeout(() => {
+                            try {
+                                const newCropper = new Cropper(preview, {
+                                    aspectRatio: 1, 
+                                    viewMode: 2, 
+                                    autoCropArea: 0.9, 
+                                    responsive: true,
+                                    restore: false,
+                                    checkCrossOrigin: false,
+                                    
+                                    guides: true,
+                                    center: true,
+                                    highlight: true,
+                                    background: true,
+                                    
+                                    cropBoxMovable: true,
+                                    cropBoxResizable: true,
+                                    toggleDragModeOnDblclick: true, 
+                                    
+                                    minCropBoxHeight: 100,
+                                    minCropBoxWidth: 100,
+                                    
+                                    wheelZoomRatio: 0.1,
+                                    
+                                    ready() {
+                                        console.log(`Cropper ready for ${fieldName}`);
+                                        
+                                        addCropperControls(section, newCropper, fieldName);
+                                        
+                                        activeCroppers.set(fieldName, {
+                                            cropper: newCropper,
+                                            isInitialized: true
+                                        });
+                                    },
+                                    error(error) {
+                                        console.error(`Cropper error for ${fieldName}:`, error);
+                                        alert('Błąd podczas tworzenia narzędzia do przycinania.');
+                                    }
+                                });
+                                
+                                console.log(`Cropper instance created for ${fieldName}`);
+                                
+                            } catch (innerError) {
+                                console.error(`Inner error creating cropper for ${fieldName}:`, innerError);
+                                alert('Błąd podczas tworzenia croppera: ' + innerError.message);
+                            }
+                        }, 50);
+
+                    } catch (error) {
+                        console.error(`Error initializing cropper for ${fieldName}:`, error);
+                        alert('Błąd podczas inicjalizacji narzędzia do przycinania: ' + error.message);
+                    }
+                };
+
+                preview.onerror = function() {
+                    console.error(`Error loading image for ${fieldName}`);
+                    alert('Błąd podczas ładowania obrazu. Spróbuj wybrać inny plik.');
+                };
+            };
+
+            reader.onerror = function() {
+                console.error(`Error reading file for ${fieldName}`);
+                alert('Błąd podczas czytania pliku. Spróbuj ponownie.');
+            };
+
+            reader.readAsDataURL(file);
+        });
+
+        cropBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            console.log(`Crop button clicked for ${fieldName}`);
+
+            const sectionData = activeCroppers.get(fieldName);
+            
+            if (!sectionData) {
+                console.error(`No section data found for ${fieldName}`);
+                alert('Błąd wewnętrzny. Spróbuj odświeżyć stronę.');
+                return;
+            }
+
+            const cropper = sectionData.cropper;
+
+            if (!preview.src || preview.src === '') {
+                alert('Proszę najpierw wybrać zdjęcie.');
+                return;
+            }
+
+            if (!cropper || !sectionData.isInitialized) {
+                alert('Narzędzie do przycinania nie jest jeszcze gotowe. Proszę poczekać chwilę i spróbować ponownie.');
+                return;
+            }
+
+            try {
+                console.log(`Starting crop process for ${fieldName}`);
+
+                const originalText = cropBtn.innerHTML;
+                cropBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Przycinanie...';
+                cropBtn.disabled = true;
+
+                const canvas = cropper.getCroppedCanvas({
+                    width: 600, 
+                    height: 600,
+                    imageSmoothingEnabled: true,
+                    imageSmoothingQuality: 'high',
+                    fillColor: '#fff' 
+                });
+
+                if (!canvas) {
+                    throw new Error('Nie można wygenerować przyciętego obrazu');
+                }
+
+                const croppedDataURL = canvas.toDataURL('image/jpeg', 0.92);
+                
+                if (!croppedDataURL || croppedDataURL === 'data:,') {
+                    throw new Error('Błąd podczas generowania danych obrazu');
+                }
+
+                if (hiddenInput) {
+                    hiddenInput.value = croppedDataURL;
+                } else {
+                    throw new Error('Nie można zapisać danych - brak ukrytego pola');
+                }
+
+                preview.src = croppedDataURL;
+                
+                const controls = section.querySelector('.cropper-controls');
+                if (controls) {
+                    controls.style.display = 'none';
+                }
+
+                cropBtn.innerHTML = '<i class="fas fa-check text-success"></i> Przycięte!';
+                cropBtn.classList.remove('btn-outline-primary');
+                cropBtn.classList.add('btn-outline-success');
+
+                setTimeout(() => {
+                    cropBtn.innerHTML = '<i class="fas fa-edit"></i> Edytuj ponownie';
+                    cropBtn.disabled = false;
+                    
+                    cropBtn.onclick = function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        if (controls) {
+                            controls.style.display = 'flex';
+                        }
+                        
+                        cropBtn.innerHTML = '<i class="fas fa-cut"></i> Przytnij';
+                        cropBtn.classList.remove('btn-outline-success');
+                        cropBtn.classList.add('btn-outline-primary');
+                       
+                    };
+                }, 1500);
+
+                console.log(`Crop process completed successfully for ${fieldName}`);
+
+            } catch (error) {
+                console.error(`Error during crop process for ${fieldName}:`, error);
+                alert('Błąd podczas przycinania: ' + error.message);
+                
+                cropBtn.innerHTML = originalText;
+                cropBtn.disabled = false;
             }
         });
-        
-        // File input change
-        input.addEventListener('change', function(e) {
-            handleFileSelect(e.target.files[0], preview, previewContainer);
+
+
+        section.addEventListener('click', (e) => {
+            if (e.target.closest('.crop-btn') || e.target.closest('.preview-container')) return;
+            if (e.target !== input) input.click();
         });
-        
-        // Drag and drop events
+
+
         section.addEventListener('dragover', (e) => {
             e.preventDefault();
             section.classList.add('drag-over');
         });
-        
+
         section.addEventListener('dragleave', (e) => {
             e.preventDefault();
             section.classList.remove('drag-over');
         });
-        
+
         section.addEventListener('drop', (e) => {
             e.preventDefault();
             section.classList.remove('drag-over');
-            
             const files = e.dataTransfer.files;
-            if (files.length > 0) {
+            if (files.length) {
+                if (!files[0].type.startsWith('image/')) {
+                    alert('Proszę upuścić plik obrazu.');
+                    return;
+                }
                 input.files = files;
-                handleFileSelect(files[0], preview, previewContainer);
+                input.dispatchEvent(new Event('change'));
             }
         });
     });
+
     
-    function handleFileSelect(file, preview, previewContainer) {
-        if (file && file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                previewContainer.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-    
-    // Form validation
-    document.getElementById('analizaForm').addEventListener('submit', function(e) {
-        const requiredFields = ['id_zdjecie_nadgarstka', 'id_zdjecie_oczu', 'id_zdjecie_wlosow'];
-        let hasError = false;
+    function addCropperControls(section, cropper, fieldName) {
         
+        if (section.querySelector('.cropper-controls')) {
+            return;
+        }
+
+        const controlsDiv = document.createElement('div');
+        controlsDiv.className = 'cropper-controls mt-2 d-flex justify-content-center gap-2 flex-wrap';
+        controlsDiv.innerHTML = `
+            <button type="button" class="btn btn-sm btn-outline-secondary zoom-in-btn" title="Powiększ">
+                <i class="fas fa-search-plus"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary zoom-out-btn" title="Pomniejsz">
+                <i class="fas fa-search-minus"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary reset-btn" title="Resetuj">
+                <i class="fas fa-undo"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary rotate-left-btn" title="Obróć w lewo">
+                <i class="fas fa-undo"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary rotate-right-btn" title="Obróć w prawo">
+                <i class="fas fa-redo"></i>
+            </button>
+        `;
+
+        const cropBtn = section.querySelector('.crop-btn');
+        cropBtn.parentNode.insertBefore(controlsDiv, cropBtn);
+
+       
+        controlsDiv.querySelector('.zoom-in-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            cropper.zoom(0.1);
+        });
+
+        controlsDiv.querySelector('.zoom-out-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            cropper.zoom(-0.1);
+        });
+
+        controlsDiv.querySelector('.reset-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            cropper.reset();
+        });
+
+        controlsDiv.querySelector('.rotate-left-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            cropper.rotate(-90);
+        });
+
+        controlsDiv.querySelector('.rotate-right-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            cropper.rotate(90);
+        });
+    }
+
+   
+    document.getElementById('analizaForm')?.addEventListener('submit', function (e) {
+        const requiredFields = [
+            'id_zdjecie_nadgarstka',
+            'id_zdjecie_oczu',
+            'id_zdjecie_wlosow'
+        ];
+
+        let hasError = false;
+        let missingFields = [];
+
         requiredFields.forEach(fieldId => {
             const field = document.getElementById(fieldId);
-            if (!field.files.length) {
+            const hiddenInput = document.querySelector(`input[name="cropped_${field?.name}"]`);
+            
+            const hasOriginalFile = field && field.files && field.files.length > 0;
+            const hasCroppedData = hiddenInput && hiddenInput.value && hiddenInput.value.trim() !== '';
+            
+            if (!hasOriginalFile && !hasCroppedData) {
                 hasError = true;
-                const section = field.closest('.upload-section');
-                section.style.borderColor = '#dc3545';
+                missingFields.push(field?.name || fieldId);
+                const section = field?.closest('.upload-section');
+                if (section) section.style.borderColor = '#dc3545';
             }
         });
-        
+
         if (hasError) {
             e.preventDefault();
-            alert('Proszę przesłać wszystkie wymagane zdjęcia.');
+            console.log('Form validation failed. Missing fields:', missingFields);
+            alert('Proszę przesłać i przytnąć wszystkie wymagane zdjęcia przed wysłaniem formularza.');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            console.log('Form validation passed');
         }
     });
+
+   
 });
 </script>
+
 {% endblock %}

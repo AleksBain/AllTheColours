@@ -19,8 +19,7 @@ urlpatterns = [
     path('historia/', views.historia_analiz, name='historia_analiz'),
     path('analiza/<int:pk>/', views.szczegoly_analizy, name='szczegoly_analizy'),
     path('analiza/<int:pk>/wykres/', views.wykres_kolorow, name='wykres_kolorow'),
-    path('analiza/<int:pk>/plik/', views.przeslij_plik, name='przeslij_plik'),
-    path('analiza/<int:pk>/pdf/', views.generuj_pdf_raport, name='generuj_pdf'),
+    
     
     
     path('eksport/csv/', views.eksport_csv, name='eksport_csv'),

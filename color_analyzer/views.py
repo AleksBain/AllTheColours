@@ -203,37 +203,6 @@ def wykres_kolorow(request, pk):
         return JsonResponse({'error': str(e)}, status=500)
 
 
-@login_required
-def przeslij_plik(request, pk):
-    """Przesyłanie dodatkowych plików do analizy"""
-    analiza = get_object_or_404(Analiza, pk=pk, uzytkownik=request.user)
-    
-    if request.method == 'POST':
-        form = PlikAnalizyForm(request.POST, request.FILES)
-        if form.is_valid():
-            plik_obj = form.save(commit=False)
-            plik_obj.analiza = analiza
-            plik_obj.nazwa_pliku = plik_obj.plik.name
-            plik_obj.rozmiar = plik_obj.plik.size
-            plik_obj.save()
-            
-            if plik_obj.plik.name.endswith(('.csv', '.xlsx')):
-                try:
-                    przetwarz_plik_danych(plik_obj)
-                    messages.success(request, 'Plik został przesłany i przetworzony!')
-                except Exception as e:
-                    messages.warning(request, f'Plik przesłano, ale wystąpił błąd: {str(e)}')
-            else:
-                messages.success(request, 'Plik został przesłany!')
-            
-            return redirect('color_analyzer:szczegoly_analizy', pk=pk)
-    else:
-        form = PlikAnalizyForm()
-    
-    return render(request, 'color_analyzer/przeslij_plik.html', {
-        'form': form,
-        'analiza': analiza
-    })
 
 
 @login_required
@@ -367,22 +336,7 @@ def dopasuj_typ_kolorystyczny(wyniki):
                 return TypKolorystyczny.objects.filter(nazwa='winter_deep').first()
 
 
-def przetwarz_plik_danych(plik_obj):
-    """Przetwarzanie przesłanych plików CSV/XLSX"""
-    try:
-        if plik_obj.plik.name.endswith('.csv'):
-            df = pd.read_csv(plik_obj.plik.path)
-        elif plik_obj.plik.name.endswith('.xlsx'):
-            df = pd.read_excel(plik_obj.plik.path)
-        else:
-            return
-        
-        if 'tonacja' in df.columns:
-            plik_obj.analiza.notatki += f"\nDane z pliku: {df['tonacja'].value_counts().to_dict()}"
-            plik_obj.analiza.save()
-            
-    except Exception as e:
-        raise Exception(f"Błąd przetwarzania pliku: {str(e)}")
+
 
 @csrf_exempt
 def api_kontrast_slider(request):

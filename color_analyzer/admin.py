@@ -163,7 +163,6 @@ class PlikAnalizyAdmin(admin.ModelAdmin):
     uzytkownik_display.short_description = "Użytkownik"
 
 
-# Kustomizacja panelu admina
 admin.site.site_header = "Color Season - Panel Administracyjny"
 admin.site.site_title = "Color Season Admin"
 admin.site.index_title = "Zarządzanie aplikacją Color Season"

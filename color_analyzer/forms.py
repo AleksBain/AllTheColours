@@ -46,11 +46,7 @@ class AnalizaForm(forms.ModelForm):
                 'accept': 'image/*',
                 'id': 'id_zdjecie_wlosow'
             }),
-            'notatki': forms.Textarea(attrs={
-                'class': 'form-control',
-                'rows': 3,
-                'placeholder': 'Dodatkowe informacje (opcjonalnie)...'
-            })
+            
         }
         labels = {
             'zdjecie_nadgarstka': 'Zdjęcie nadgarstka/przedramienia',

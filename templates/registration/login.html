@@ -109,7 +109,6 @@
 </div>
 
 <script>
-    // Toggle password visibility
     document.getElementById('togglePassword').addEventListener('click', function() {
         const password = document.getElementById('{{ form.password.id_for_label }}');
         const icon = this.querySelector('i');
@@ -125,7 +124,6 @@
         }
     });
 
-    // Form validation
     (function() {
         'use strict';
         window.addEventListener('load', function() {

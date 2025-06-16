@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import matplotlib
-matplotlib.use('Agg')  # Backend bez GUI
+matplotlib.use('Agg')  
 import matplotlib.pyplot as plt
 from colorthief import ColorThief
 from sklearn.cluster import KMeans
@@ -16,7 +16,6 @@ def pobierz_dominujace_kolory(sciezka_obrazu, liczba_kolorow=5):
         color_thief = ColorThief(sciezka_obrazu)
         palette = color_thief.get_palette(color_count=liczba_kolorow)
         
-        # Konwertuj na hex
         hex_kolory = []
         for rgb in palette:
             hex_color = '#{:02x}{:02x}{:02x}'.format(rgb[0], rgb[1], rgb[2])
@@ -25,7 +24,7 @@ def pobierz_dominujace_kolory(sciezka_obrazu, liczba_kolorow=5):
         return hex_kolory
     except Exception as e:
         print(f"Błąd pobierania kolorów: {e}")
-        return ['#000000']  # Fallback
+        return ['#000000']  
 
 
 def analizuj_kolory(kolory_skory, kolory_oczu, kolory_wlosow):
@@ -64,8 +63,6 @@ def analizuj_kolory(kolory_skory, kolory_oczu, kolory_wlosow):
             rgb = hex_to_rgb(hex_color)
             h, s, v = rgb_to_hsv(rgb)
             
-            # Ciepłe: 0-60° (czerwień-żółty) i 300-360° (magenta-czerwień)
-            # Zimne: 60-300° (żółty-zielony-niebieski-magenta)
             if (0 <= h <= 60) or (300 <= h <= 360):
                 ciepla_count += 1
             else:
@@ -77,7 +74,6 @@ def analizuj_kolory(kolory_skory, kolory_oczu, kolory_wlosow):
         """Oblicza poziom kontrastu między kolorami"""
         def luminancja(hex_color):
             rgb = hex_to_rgb(hex_color)
-            # Formuła luminancji względnej
             r, g, b = [x/255.0 for x in rgb]
             return 0.299 * r + 0.587 * g + 0.114 * b
         
@@ -85,12 +81,9 @@ def analizuj_kolory(kolory_skory, kolory_oczu, kolory_wlosow):
         lum_wlosy = np.mean([luminancja(c) for c in kolory_wlosow])
         lum_oczy = np.mean([luminancja(c) for c in kolory_oczu])
         
-        # Kontrast między skórą a włosami
         kontrast_wlosy = abs(lum_skora - lum_wlosy)
-        # Kontrast między skórą a oczami
         kontrast_oczy = abs(lum_skora - lum_oczy)
-        
-        # Średni kontrast na skali 1-10
+   
         sredni_kontrast = (kontrast_wlosy + kontrast_oczy) / 2
         return min(10, max(1, int(sredni_kontrast * 10)))
     
@@ -105,14 +98,12 @@ def analizuj_kolory(kolory_skory, kolory_oczu, kolory_wlosow):
         srednie_nasycenie = np.mean(nasycenia)
         return min(10, max(1, int(srednie_nasycenie * 10)))
     
-    # Główna analiza
     wszystkie_kolory = kolory_skory + kolory_oczu + kolory_wlosow
     
     tonacja = okresl_tonacje(wszystkie_kolory)
     kontrast = oblicz_kontrast(kolory_skory, kolory_wlosow, kolory_oczu)
     nasycenie = oblicz_nasycenie(wszystkie_kolory)
     
-    # Pewność wyniku (uproszczona)
     pewnosc = min(1.0, (kontrast + nasycenie) / 20.0 + 0.5)
     
     return {
@@ -122,34 +113,29 @@ def analizuj_kolory(kolory_skory, kolory_oczu, kolory_wlosow):
         'pewnosc': pewnosc
     }
 
-
 def generuj_wykres_kolorow(analiza):
     """Generuje wykres kolorów dla analizy"""
     try:
         fig, axes = plt.subplots(2, 2, figsize=(12, 10))
         
-        # Wykres 1: Kolory skóry
         if analiza.kolory_skory:
             kolory_skory = [k for k in analiza.kolory_skory if k]
             if kolory_skory:
                 axes[0, 0].pie([1] * len(kolory_skory), colors=kolory_skory, startangle=90)
                 axes[0, 0].set_title('Kolory skóry')
         
-        # Wykres 2: Kolory oczu
         if analiza.kolory_oczu:
             kolory_oczu = [k for k in analiza.kolory_oczu if k]
             if kolory_oczu:
                 axes[0, 1].pie([1] * len(kolory_oczu), colors=kolory_oczu, startangle=90)
                 axes[0, 1].set_title('Kolory oczu')
         
-        # Wykres 3: Kolory włosów
         if analiza.kolory_wlosow:
             kolory_wlosow = [k for k in analiza.kolory_wlosow if k]
             if kolory_wlosow:
                 axes[1, 0].pie([1] * len(kolory_wlosow), colors=kolory_wlosow, startangle=90)
                 axes[1, 0].set_title('Kolory włosów')
         
-        # Wykres 4: Paleta typu kolorystycznego
         if analiza.typ_kolorystyczny and analiza.typ_kolorystyczny.kolory_podstawowe:
             paleta = analiza.typ_kolorystyczny.kolory_podstawowe
             axes[1, 1].pie([1] * len(paleta), colors=paleta, startangle=90)
@@ -157,7 +143,6 @@ def generuj_wykres_kolorow(analiza):
         
         plt.tight_layout()
         
-        # Konwertuj do base64
         buffer = BytesIO()
         plt.savefig(buffer, format='png', dpi=150, bbox_inches='tight')
         buffer.seek(0)
@@ -180,11 +165,9 @@ def generuj_koło_kolorow():
     """Generuje koło kolorów dla wizualizacji"""
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(projection='polar'))
     
-    # Generuj kolory dla koła
     theta = np.linspace(0, 2*np.pi, 360)
     radius = np.ones_like(theta)
     
-    # Utwórz kolory HSV
     colors = []
     for angle in theta:
         hue = angle / (2 * np.pi)
@@ -195,7 +178,6 @@ def generuj_koło_kolorow():
     ax.set_title('Koło kolorów', y=1.08)
     ax.grid(True)
     
-    # Konwertuj do base64
     buffer = BytesIO()
     plt.savefig(buffer, format='png', dpi=150, bbox_inches='tight')
     buffer.seek(0)
@@ -209,32 +191,25 @@ def generuj_koło_kolorow():
 def analizuj_zdjecie_opencv(sciezka_obrazu):
     """Dodatkowa analiza używając OpenCV"""
     try:
-        # Wczytaj obraz
         img = cv2.imread(sciezka_obrazu)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         
-        # Zmień rozmiar dla szybszego przetwarzania
         img_small = cv2.resize(img, (150, 150))
         
-        # Przekształć do jednowymiarowej tablicy pikseli
         pixels = img_small.reshape(-1, 3)
         
-        # Usuń piksele bardzo ciemne lub bardzo jasne (szum)
         mask = np.all(pixels > 20, axis=1) & np.all(pixels < 235, axis=1)
         pixels_filtered = pixels[mask]
         
-        if len(pixels_filtered) < 50:  # Za mało danych
+        if len(pixels_filtered) < 50:  
             pixels_filtered = pixels
         
-        # Klasteryzacja K-means dla dominujących kolorów
         n_colors = min(5, len(pixels_filtered))
         kmeans = KMeans(n_clusters=n_colors, random_state=42, n_init=10)
         kmeans.fit(pixels_filtered)
         
-        # Pobierz dominujące kolory
         dominant_colors = kmeans.cluster_centers_.astype(int)
         
-        # Konwertuj na hex
         hex_colors = []
         for color in dominant_colors:
             hex_color = '#{:02x}{:02x}{:02x}'.format(color[0], color[1], color[2])
@@ -244,7 +219,7 @@ def analizuj_zdjecie_opencv(sciezka_obrazu):
         
     except Exception as e:
         print(f"Błąd analizy OpenCV: {e}")
-        return ['#808080']  # Szary jako fallback
+        return ['#808080']  
 
 
 def porownaj_z_typami_kolorystycznymi(wyniki_analizy):
@@ -257,11 +232,9 @@ def porownaj_z_typami_kolorystycznymi(wyniki_analizy):
     for typ in wszystkie_typy:
         score = 0
         
-        # Porównanie tonacji
         if typ.dominujaca_tonacja == wyniki_analizy['tonacja']:
             score += 3
         
-        # Porównanie kontrastu
         typ_kontrast_map = {
             'niski': (1, 4),
             'średni': (4, 7), 
@@ -273,7 +246,6 @@ def porownaj_z_typami_kolorystycznymi(wyniki_analizy):
             if min_k <= wyniki_analizy['kontrast'] <= max_k:
                 score += 2
         
-        # Porównanie nasycenia
         typ_nasycenie_map = {
             'miękkie': (1, 4),
             'czyste': (4, 7),
@@ -291,6 +263,5 @@ def porownaj_z_typami_kolorystycznymi(wyniki_analizy):
             'pewnosc': min(1.0, score / 7.0)
         })
     
-    # Sortuj według score
     dopasowania.sort(key=lambda x: x['score'], reverse=True)
-    return dopasowania[:3]  # Top 3 dopasowania
+    return dopasowania[:3]  

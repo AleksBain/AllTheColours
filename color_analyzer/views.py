@@ -33,17 +33,26 @@ from .utils import analizuj_kolory, generuj_wykres_kolorow, pobierz_dominujace_k
 
 
 def strona_glowna(request):
-    """Strona główna aplikacji"""
-    
+    analiza_count_by_typ = (
+        Analiza.objects.filter(status='completed', typ_kolorystyczny__isnull=False)
+        .values('typ_kolorystyczny__nazwa')
+        .annotate(count=Count('id'))
+        .order_by('-count')
+    )
+
+    typ_names = [item['typ_kolorystyczny__nazwa'] for item in analiza_count_by_typ]
+    typ_counts = [item['count'] for item in analiza_count_by_typ]
+
     context = {
         'total_analiz': Analiza.objects.filter(status='completed').count(),
         'total_users': User.objects.count(),
         'total_types': TypKolorystyczny.objects.count(),
         'typy_kolorystyczne': TypKolorystyczny.objects.all()[:6],
-        'ostatnie_analizy': Analiza.objects.filter(status='completed').order_by('-data_utworzenia')[:3]
+        'ostatnie_analizy': Analiza.objects.filter(status='completed').order_by('-data_utworzenia')[:3],
+        'typ_names_json': json.dumps(typ_names),
+        'typ_counts_json': json.dumps(typ_counts),
     }
     return render(request, 'color_analyzer/index.html', context)
-
 
 def rejestracja(request):
     """Rejestracja nowego użytkownika"""
@@ -69,7 +78,6 @@ def nowa_analiza(request):
             analiza.uzytkownik = request.user
             analiza.save()
             
-            # Rozpocznij analizę kolorów
             try:
                 wykonaj_analize_kolorow(analiza)
                 messages.success(request, 'Analiza została rozpoczęta!')
@@ -89,7 +97,6 @@ def historia_analiz(request):
     """Lista analiz użytkownika z filtrowaniem i stronicowaniem"""
     analizy = Analiza.objects.filter(uzytkownik=request.user)
     
-    # Filtrowanie
     form = FiltrAnalizForm(request.GET)
     if form.is_valid():
         if form.cleaned_data.get('typ_kolorystyczny'):
@@ -99,7 +106,6 @@ def historia_analiz(request):
         if form.cleaned_data.get('data_do'):
             analizy = analizy.filter(data_utworzenia__date__lte=form.cleaned_data['data_do'])
     
-    # Eksport do CSV
     if request.GET.get('export') == 'csv':
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="analizy.csv"'
@@ -116,9 +122,8 @@ def historia_analiz(request):
                 analiza.nasycenie_poziom,
                 analiza.notatki,
             ])
-        return response  # <-- Zwracamy response od razu!
+        return response 
 
-    # Stronicowanie
     paginator = Paginator(analizy, 6)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
@@ -136,7 +141,6 @@ def szczegoly_analizy(request, pk):
     """Szczegóły konkretnej analizy"""
     analiza = get_object_or_404(Analiza, pk=pk, uzytkownik=request.user)
     
-    # Jeśli analiza nie ma przypisanego typu i jest gotowa, pokaż opcje wyboru
     wybierz_typ_form = None
     if analiza.status == 'completed' and not analiza.typ_kolorystyczny:
         if request.method == 'POST':
@@ -213,7 +217,6 @@ def przeslij_plik(request, pk):
             plik_obj.rozmiar = plik_obj.plik.size
             plik_obj.save()
             
-            # Przetwórz plik jeśli to CSV/XLSX
             if plik_obj.plik.name.endswith(('.csv', '.xlsx')):
                 try:
                     przetwarz_plik_danych(plik_obj)
@@ -277,11 +280,9 @@ def generuj_pdf_raport(request, pk):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="analiza_{pk}.pdf"'
     
-    # Generuj PDF
     buffer = BytesIO()
     p = canvas.Canvas(buffer, pagesize=letter)
     
-    # Nagłówek
     p.setFont("Helvetica-Bold", 16)
     p.drawString(100, 750, f"Raport Analizy Kolorystycznej")
     p.setFont("Helvetica", 12)
@@ -308,7 +309,6 @@ def wykonaj_analize_kolorow(analiza):
         analiza.status = 'processing'
         analiza.save()
         
-        # Analiza kolorów z każdego zdjęcia
         kolory_skory = pobierz_dominujace_kolory(analiza.zdjecie_nadgarstka.path)
         kolory_oczu = pobierz_dominujace_kolory(analiza.zdjecie_oczu.path)
         kolory_wlosow = pobierz_dominujace_kolory(analiza.zdjecie_wlosow.path)
@@ -317,14 +317,12 @@ def wykonaj_analize_kolorow(analiza):
         analiza.kolory_oczu = kolory_oczu
         analiza.kolory_wlosow = kolory_wlosow
         
-        # Określenie tonacji i kontrastów
         wyniki = analizuj_kolory(kolory_skory, kolory_oczu, kolory_wlosow)
         analiza.tonacja_skory = wyniki['tonacja']
         analiza.kontrast_poziom = wyniki['kontrast']
         analiza.nasycenie_poziom = wyniki['nasycenie']
         analiza.pewnosc_wyniku = wyniki['pewnosc']
         
-        # Przypisanie typu kolorystycznego
         typ = dopasuj_typ_kolorystyczny(wyniki)
         if typ:
             analiza.typ_kolorystyczny = typ
@@ -345,7 +343,6 @@ def dopasuj_typ_kolorystyczny(wyniki):
     kontrast = wyniki['kontrast']
     nasycenie = wyniki['nasycenie']
     
-    # Logika dopasowania typu na podstawie parametrów
     if tonacja == 'ciepła':
         if kontrast <= 4:
             if nasycenie <= 4:
@@ -357,7 +354,7 @@ def dopasuj_typ_kolorystyczny(wyniki):
                 return TypKolorystyczny.objects.filter(nazwa='autumn_warm').first()
             else:
                 return TypKolorystyczny.objects.filter(nazwa='autumn_deep').first()
-    else:  # zimna
+    else:  
         if kontrast <= 4:
             if nasycenie <= 4:
                 return TypKolorystyczny.objects.filter(nazwa='summer_soft').first()
@@ -380,7 +377,6 @@ def przetwarz_plik_danych(plik_obj):
         else:
             return
         
-        # Przykładowe przetwarzanie - można rozszerzyć
         if 'tonacja' in df.columns:
             plik_obj.analiza.notatki += f"\nDane z pliku: {df['tonacja'].value_counts().to_dict()}"
             plik_obj.analiza.save()
@@ -388,8 +384,6 @@ def przetwarz_plik_danych(plik_obj):
     except Exception as e:
         raise Exception(f"Błąd przetwarzania pliku: {str(e)}")
 
-
-# API endpoints dla AJAX
 @csrf_exempt
 def api_kontrast_slider(request):
     """API endpoint dla slidera kontrastu"""
@@ -397,7 +391,6 @@ def api_kontrast_slider(request):
         data = json.loads(request.body)
         kontrast_value = data.get('kontrast', 5)
         
-        # Zwróć sugerowane typy na podstawie kontrastu
         if kontrast_value <= 3:
             typy = TypKolorystyczny.objects.filter(
                 nazwa__in=['summer_soft', 'autumn_soft']
@@ -418,175 +411,3 @@ def api_kontrast_slider(request):
     return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 
-#################################
-
-# Add this debug view to your views.py to check what types exist in your database
-
-@login_required
-def debug_typy_kolorystyczne(request):
-    """Debug view to check existing color types"""
-    typy = TypKolorystyczny.objects.all()
-    debug_info = []
-    
-    for typ in typy:
-        debug_info.append({
-            'id': typ.id,
-            'nazwa': typ.nazwa,
-            'get_nazwa_display': typ.get_nazwa_display() if hasattr(typ, 'get_nazwa_display') else 'No display method',
-            'all_fields': {field.name: getattr(typ, field.name) for field in typ._meta.fields}
-        })
-    
-    return JsonResponse({
-        'total_types': typy.count(),
-        'types': debug_info
-    }, indent=2)
-
-
-# Fixed dopasuj_typ_kolorystyczny function based on your SEZONY choices
-def dopasuj_typ_kolorystyczny(wyniki):
-    """Dopasowuje typ kolorystyczny na podstawie wyników analizy"""
-    tonacja = wyniki['tonacja']
-    kontrast = wyniki['kontrast']
-    nasycenie = wyniki['nasycenie']
-    
-    # First, let's see what types are available
-    wszystkie_typy = TypKolorystyczny.objects.all()
-    
-    # Debug: log available types
-    print(f"Available types: {[typ.nazwa for typ in wszystkie_typy]}")
-    print(f"Analysis results - Tonacja: {tonacja}, Kontrast: {kontrast}, Nasycenie: {nasycenie}")
-    
-    # If no types exist, return None
-    if not wszystkie_typy.exists():
-        print("No color types found in database!")
-        return None
-    
-    # Use the exact SEZONY values from your model
-    # Based on your SEZONY choices, here's the mapping:
-    if tonacja == 'ciepła':
-        if kontrast <= 4:
-            if nasycenie <= 4:
-                # Soft, low contrast warm = Miękka Jesień
-                typ = wszystkie_typy.filter(nazwa='autumn_soft').first()
-            else:
-                # High saturation, low contrast warm = Jasna Wiosna
-                typ = wszystkie_typy.filter(nazwa='spring_light').first()
-        else:  # high contrast
-            if nasycenie <= 6:
-                # Medium saturation, high contrast warm = Ciepła Jesień
-                typ = wszystkie_typy.filter(nazwa='autumn_warm').first()
-            else:
-                # High saturation, high contrast warm = Głęboka Jesień or Ciepła Wiosna
-                typ = wszystkie_typy.filter(nazwa='autumn_deep').first()
-                if not typ:
-                    typ = wszystkie_typy.filter(nazwa='spring_warm').first()
-    else:  # zimna tonacja
-        if kontrast <= 4:
-            if nasycenie <= 4:
-                # Soft, low contrast cool = Miękkie Lato
-                typ = wszystkie_typy.filter(nazwa='summer_soft').first()
-            else:
-                # High saturation, low contrast cool = Jasne Lato
-                typ = wszystkie_typy.filter(nazwa='summer_light').first()
-        else:  # high contrast
-            if nasycenie <= 6:
-                # Medium saturation, high contrast cool = Chłodne Lato or Chłodna Zima
-                typ = wszystkie_typy.filter(nazwa='summer_cool').first()
-                if not typ:
-                    typ = wszystkie_typy.filter(nazwa='winter_cool').first()
-            else:
-                # High saturation, high contrast cool = Głęboka Zima or Czysta Zima
-                typ = wszystkie_typy.filter(nazwa='winter_deep').first()
-                if not typ:
-                    typ = wszystkie_typy.filter(nazwa='winter_clear').first()
-    
-    if typ:
-        print(f"Found matching type: {typ.nazwa} - {typ.get_nazwa_display()}")
-        return typ
-    
-    # Fallback 1: Try any warm/cool season
-    if tonacja == 'ciepła':
-        # Try any spring or autumn type
-        for season_type in ['spring_light', 'spring_warm', 'spring_clear', 'autumn_soft', 'autumn_warm', 'autumn_deep']:
-            typ = wszystkie_typy.filter(nazwa=season_type).first()
-            if typ:
-                print(f"Found warm season fallback: {typ.nazwa}")
-                return typ
-    else:  # zimna
-        # Try any summer or winter type
-        for season_type in ['summer_light', 'summer_cool', 'summer_soft', 'winter_cool', 'winter_clear', 'winter_deep']:
-            typ = wszystkie_typy.filter(nazwa=season_type).first()
-            if typ:
-                print(f"Found cool season fallback: {typ.nazwa}")
-                return typ
-    
-    # Fallback 2: Return first available type
-    pierwszy_typ = wszystkie_typy.first()
-    if pierwszy_typ:
-        print(f"Using first available type as fallback: {pierwszy_typ.nazwa}")
-        return pierwszy_typ
-    
-    print("No suitable type found!")
-    return None
-
-
-# Alternative approach - let user choose the type manually
-def wykonaj_analize_kolorow(analiza):
-    """Wykonuje analizę kolorów na przesłanych zdjęciach"""
-    try:
-        analiza.status = 'processing'
-        analiza.save()
-        
-        # Analiza kolorów z każdego zdjęcia
-        kolory_skory = pobierz_dominujace_kolory(analiza.zdjecie_nadgarstka.path)
-        kolory_oczu = pobierz_dominujace_kolory(analiza.zdjecie_oczu.path)
-        kolory_wlosow = pobierz_dominujace_kolory(analiza.zdjecie_wlosow.path)
-        
-        analiza.kolory_skory = kolory_skory
-        analiza.kolory_oczu = kolory_oczu
-        analiza.kolory_wlosow = kolory_wlosow
-        
-        # Określenie tonacji i kontrastów
-        wyniki = analizuj_kolory(kolory_skory, kolory_oczu, kolory_wlosow)
-        analiza.tonacja_skory = wyniki['tonacja']
-        analiza.kontrast_poziom = wyniki['kontrast']
-        analiza.nasycenie_poziom = wyniki['nasycenie']
-        analiza.pewnosc_wyniku = wyniki['pewnosc']
-        
-        # Przypisanie typu kolorystycznego - improved version
-        typ = dopasuj_typ_kolorystyczny(wyniki)
-        if typ:
-            analiza.typ_kolorystyczny = typ
-            print(f"Assigned type: {typ.nazwa}")
-        else:
-            print("No type assigned - user will need to choose manually")
-            # Add a note for manual selection
-            analiza.notatki = (analiza.notatki or "") + "\nTyp kolorystyczny wymaga ręcznego wyboru."
-        
-        analiza.status = 'completed'
-        analiza.save()
-        
-        print(f"Analysis completed for {analiza.id}")
-        
-    except Exception as e:
-        analiza.status = 'error'
-        analiza.notatki = f"Błąd analizy: {str(e)}"
-        analiza.save()
-        print(f"Analysis failed for {analiza.id}: {str(e)}")
-        raise e
-
-
-# Add this to check what's in your database
-def check_database_types():
-    """Helper function to check what's actually in your database"""
-    typy = TypKolorystyczny.objects.all()
-    print("=== DATABASE TYPES ===")
-    for typ in typy:
-        print(f"ID: {typ.id}, Nazwa: {typ.nazwa}")
-        try:
-            print(f"  Display: {typ.get_nazwa_display()}")
-        except:
-            print(f"  No get_nazwa_display method")
-        print("---")
-    print(f"Total types: {typy.count()}")
-    return typy

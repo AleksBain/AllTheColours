@@ -1,4 +1,4 @@
-<!-- filepath: /Users/aleksandra_bainczyk/Zajęcia_Django/color_season/templates/color_analyzer/szczegoly_analizy.html -->
+
 {% extends "base.html" %}
 {% block title %}Szczegóły analizy{% endblock %}
 {% block content %}
@@ -11,8 +11,20 @@
         <li>Kontrast: {{ analiza.kontrast_poziom }}</li>
         <li>Nasycenie: {{ analiza.nasycenie_poziom }}</li>
         <li>Pewność wyniku: {{ analiza.pewnosc_wyniku }}</li>
-        <li>Notatki: {{ analiza.notatki }}</li>
+        
     </ul>
     <a href="{% url 'color_analyzer:historia_analiz' %}" class="btn btn-secondary">Powrót do historii</a>
 </div>
+
+<!-- Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+    window.addEventListener('load', function () {
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+    });
+</script>
 {% endblock %}

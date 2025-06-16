@@ -172,7 +172,6 @@
                         {% endif %}
                     </div>
 
-                    <!-- Handle any additional fields that might be in your custom form -->
                     {% for field in form %}
                         {% if field.name not in "username,email,first_name,last_name,password1,password2" %}
                         <div class="mb-3">
@@ -194,15 +193,7 @@
                         {% endif %}
                     {% endfor %}
 
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="agreeTerms" required>
-                        <label class="form-check-label" for="agreeTerms">
-                            Akceptuję <a href="#" class="text-decoration-none">regulamin</a> i <a href="#" class="text-decoration-none">politykę prywatności</a>
-                        </label>
-                        <div class="invalid-feedback">
-                            Musisz zaakceptować regulamin, aby kontynuować.
-                        </div>
-                    </div>
+                    
 
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary-custom btn-lg">
@@ -234,7 +225,7 @@
 </div>
 
 <script>
-    // Toggle password visibility for both password fields
+    
     document.getElementById('togglePassword1').addEventListener('click', function() {
         const password = document.getElementById('{{ form.password1.id_for_label }}');
         const icon = this.querySelector('i');
@@ -265,7 +256,6 @@
         }
     });
 
-    // Form validation
     (function() {
         'use strict';
         window.addEventListener('load', function() {
@@ -282,13 +272,13 @@
         }, false);
     })();
 
-    // Password strength indicator (optional enhancement)
+    
     document.getElementById('{{ form.password1.id_for_label }}').addEventListener('input', function() {
         const password = this.value;
         const strengthIndicator = document.getElementById('passwordStrength');
         
         if (password.length < 8) {
-            // You can add password strength visualization here
+            
         }
     });
 </script>

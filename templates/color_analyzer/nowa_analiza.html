@@ -208,21 +208,7 @@
                     {% endif %}
                 </div>
 
-                <!-- Notatki -->
-                <div class="form-section">
-                    <h3 class="section-title">
-                        <i class="fas fa-sticky-note me-2"></i>
-                        {{ form.notatki.label }}
-                    </h3>
-                    {{ form.notatki }}
-                    {% if form.notatki.errors %}
-                        <div class="text-danger mt-2">
-                            {% for error in form.notatki.errors %}
-                                <small>{{ error }}</small>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
+                
 
                 <!-- Przyciski -->
                 <div class="form-section text-center">

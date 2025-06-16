@@ -1,4 +1,4 @@
-
+python==3.11.8
 Django==4.2.7
 Pillow==11.2.1
 opencv-python==4.8.1.78

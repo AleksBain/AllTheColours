@@ -1,4 +1,4 @@
-python==3.10.13
+
 
 Django==4.2.7
 Pillow==11.2.1

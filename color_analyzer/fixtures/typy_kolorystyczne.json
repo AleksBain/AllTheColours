@@ -4,7 +4,13 @@
     "pk": 1,
     "fields": {
       "nazwa": "spring_warm",
-      "nazwa_publiczna": "Warm Spring"
+      "nazwa_publiczna": "Warm Spring",
+      "opis": "Warm spring - warm, bright colors.",
+      "dominujaca_tonacja": "warm",
+      "poziom_kontrastu": "medium",
+      "nasycenie": "high",
+      "kolory_podstawowe": ["coral", "apricot", "warm yellow"],
+      "kolory_unikane": ["cool blues", "dark grays"]
     }
   },
   {
@@ -12,7 +18,13 @@
     "pk": 2,
     "fields": {
       "nazwa": "autumn_soft",
-      "nazwa_publiczna": "Soft Autumn"
+      "nazwa_publiczna": "Soft Autumn",
+      "opis": "Soft autumn - warm, muted tones.",
+      "dominujaca_tonacja": "warm",
+      "poziom_kontrastu": "low",
+      "nasycenie": "medium",
+      "kolory_podstawowe": ["olive", "rust brown", "mustard"],
+      "kolory_unikane": ["bright cool colors", "pure white"]
     }
   },
   {
@@ -20,7 +32,13 @@
     "pk": 3,
     "fields": {
       "nazwa": "autumn_warm",
-      "nazwa_publiczna": "Warm Autumn"
+      "nazwa_publiczna": "Warm Autumn",
+      "opis": "Warm autumn - intense, warm colors.",
+      "dominujaca_tonacja": "warm",
+      "poziom_kontrastu": "medium",
+      "nasycenie": "high",
+      "kolory_podstawowe": ["copper", "brick", "golden yellow"],
+      "kolory_unikane": ["cool blues", "light pink"]
     }
   },
   {
@@ -28,7 +46,13 @@
     "pk": 4,
     "fields": {
       "nazwa": "autumn_deep",
-      "nazwa_publiczna": "Deep Autumn"
+      "nazwa_publiczna": "Deep Autumn",
+      "opis": "Deep autumn - dark, warm colors.",
+      "dominujaca_tonacja": "warm",
+      "poziom_kontrastu": "high",
+      "nasycenie": "medium",
+      "kolory_podstawowe": ["dark brown", "forest green", "burgundy"],
+      "kolory_unikane": ["light pastels", "cool grays"]
     }
   },
   {
@@ -36,7 +60,13 @@
     "pk": 5,
     "fields": {
       "nazwa": "summer_soft",
-      "nazwa_publiczna": "Soft Summer"
+      "nazwa_publiczna": "Soft Summer",
+      "opis": "Soft summer - cool, muted colors.",
+      "dominujaca_tonacja": "cool",
+      "poziom_kontrastu": "low",
+      "nasycenie": "medium",
+      "kolory_podstawowe": ["lavender", "pastel pink", "dove blue"],
+      "kolory_unikane": ["warm oranges", "intense reds"]
     }
   },
   {
@@ -44,7 +74,13 @@
     "pk": 6,
     "fields": {
       "nazwa": "summer_light",
-      "nazwa_publiczna": "Light Summer"
+      "nazwa_publiczna": "Light Summer",
+      "opis": "Light summer - light, cool colors.",
+      "dominujaca_tonacja": "cool",
+      "poziom_kontrastu": "low",
+      "nasycenie": "light",
+      "kolory_podstawowe": ["light blue", "light gray", "pink"],
+      "kolory_unikane": ["warm yellows", "dark colors"]
     }
   },
   {
@@ -52,7 +88,13 @@
     "pk": 7,
     "fields": {
       "nazwa": "winter_cool",
-      "nazwa_publiczna": "Cool Winter"
+      "nazwa_publiczna": "Cool Winter",
+      "opis": "Cool winter - intense, cool colors.",
+      "dominujaca_tonacja": "cool",
+      "poziom_kontrastu": "high",
+      "nasycenie": "high",
+      "kolory_podstawowe": ["snow white", "black", "icy blue"],
+      "kolory_unikane": ["warm browns", "oranges"]
     }
   },
   {
@@ -60,7 +102,13 @@
     "pk": 8,
     "fields": {
       "nazwa": "winter_deep",
-      "nazwa_publiczna": "Deep Winter"
+      "nazwa_publiczna": "Deep Winter",
+      "opis": "Deep winter - dark, intense colors.",
+      "dominujaca_tonacja": "cool",
+      "poziom_kontrastu": "high",
+      "nasycenie": "medium",
+      "kolory_podstawowe": ["dark navy", "graphite", "burgundy"],
+      "kolory_unikane": ["light pastels", "warm browns"]
     }
   },
   {
@@ -68,7 +116,13 @@
     "pk": 9,
     "fields": {
       "nazwa": "summer_cool",
-      "nazwa_publiczna": "Cool Summer"
+      "nazwa_publiczna": "Cool Summer",
+      "opis": "Cool summer - pastel, cool colors.",
+      "dominujaca_tonacja": "cool",
+      "poziom_kontrastu": "medium",
+      "nasycenie": "medium",
+      "kolory_podstawowe": ["grayish blue", "pink", "lavender"],
+      "kolory_unikane": ["warm yellows", "oranges"]
     }
   },
   {
@@ -76,7 +130,41 @@
     "pk": 10,
     "fields": {
       "nazwa": "winter_clear",
-      "nazwa_publiczna": "Clear Winter"
+      "nazwa_publiczna": "Clear Winter",
+      "opis": "Clear winter - bright, clear and contrasting colors.",
+      "dominujaca_tonacja": "cool",
+      "poziom_kontrastu": "high",
+      "nasycenie": "high",
+      "kolory_podstawowe": ["snow white", "black", "bright red"],
+      "kolory_unikane": ["warm browns", "muted colors"]
+    }
+  },
+  {
+    "model": "color_analyzer.typkolororystyczny",
+    "pk": 11,
+    "fields": {
+      "nazwa": "spring_light",
+      "nazwa_publiczna": "Light Spring",
+      "opis": "Light spring - warm and bright colors.",
+      "dominujaca_tonacja": "warm",
+      "poziom_kontrastu": "low",
+      "nasycenie": "light",
+      "kolory_podstawowe": ["cream", "light yellow", "light peach"],
+      "kolory_unikane": ["dark browns", "dark navy"]
+    }
+  },
+  {
+    "model": "color_analyzer.typkolorystyczny",
+    "pk": 12,
+    "fields": {
+      "nazwa": "spring_clear",
+      "nazwa_publiczna": "Clear Spring",
+      "opis": "Clear spring - bright, vivid colors.",
+      "dominujaca_tonacja": "warm",
+      "poziom_kontrastu": "high",
+      "nasycenie": "intense",
+      "kolory_podstawowe": ["bright yellow", "turquoise", "light green"],
+      "kolory_unikane": ["muted browns", "dark greens"]
     }
   }
 ]

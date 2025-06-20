@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: color-analyzer
+    env: python
+    buildCommand: "./manage.py collectstatic --noinput"
+    startCommand: "gunicorn color_season.wsgi:application"
+    preDeployCommand: "python manage.py migrate && python manage.py loaddata fixtures/typy_kolorystyczne.json"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: your_project_name.settings

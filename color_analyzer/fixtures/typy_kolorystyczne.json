@@ -1,0 +1,82 @@
+[
+  {
+    "model": "color_analyzer.typkolorystyczny",
+    "pk": 1,
+    "fields": {
+      "nazwa": "spring_warm",
+      "nazwa_publiczna": "Warm Spring"
+    }
+  },
+  {
+    "model": "color_analyzer.typkolorystyczny",
+    "pk": 2,
+    "fields": {
+      "nazwa": "autumn_soft",
+      "nazwa_publiczna": "Soft Autumn"
+    }
+  },
+  {
+    "model": "color_analyzer.typkolorystyczny",
+    "pk": 3,
+    "fields": {
+      "nazwa": "autumn_warm",
+      "nazwa_publiczna": "Warm Autumn"
+    }
+  },
+  {
+    "model": "color_analyzer.typkolorystyczny",
+    "pk": 4,
+    "fields": {
+      "nazwa": "autumn_deep",
+      "nazwa_publiczna": "Deep Autumn"
+    }
+  },
+  {
+    "model": "color_analyzer.typkolorystyczny",
+    "pk": 5,
+    "fields": {
+      "nazwa": "summer_soft",
+      "nazwa_publiczna": "Soft Summer"
+    }
+  },
+  {
+    "model": "color_analyzer.typkolorystyczny",
+    "pk": 6,
+    "fields": {
+      "nazwa": "summer_light",
+      "nazwa_publiczna": "Light Summer"
+    }
+  },
+  {
+    "model": "color_analyzer.typkolorystyczny",
+    "pk": 7,
+    "fields": {
+      "nazwa": "winter_cool",
+      "nazwa_publiczna": "Cool Winter"
+    }
+  },
+  {
+    "model": "color_analyzer.typkolorystyczny",
+    "pk": 8,
+    "fields": {
+      "nazwa": "winter_deep",
+      "nazwa_publiczna": "Deep Winter"
+    }
+  },
+  {
+    "model": "color_analyzer.typkolorystyczny",
+    "pk": 9,
+    "fields": {
+      "nazwa": "summer_cool",
+      "nazwa_publiczna": "Cool Summer"
+    }
+  },
+  {
+    "model": "color_analyzer.typkolorystyczny",
+    "pk": 10,
+    "fields": {
+      "nazwa": "winter_clear",
+      "nazwa_publiczna": "Clear Winter"
+    }
+  }
+]

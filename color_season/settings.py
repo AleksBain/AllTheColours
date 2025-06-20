@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+load_dotenv()
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -149,3 +153,13 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# Ensure CSRF and session cookies are sent securely
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# Trust headers from Render's proxy (so Django knows it's HTTPS)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# If you have a specific Render domain, add it here
+CSRF_TRUSTED_ORIGINS = ['https://allthecolours.onrender.com/']

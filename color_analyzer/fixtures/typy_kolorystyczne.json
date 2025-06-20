@@ -140,7 +140,7 @@
     }
   },
   {
-    "model": "color_analyzer.typkolororystyczny",
+    "model": "color_analyzer.typkolorystyczny",
     "pk": 11,
     "fields": {
       "nazwa": "spring_light",

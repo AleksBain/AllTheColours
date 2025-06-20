@@ -1,102 +1,27 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Color Season - Analiza Typu Kolorystycznego{% endblock %}</title>
+    {% load static %}
     
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        .btn-primary-custom {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            border: none;
-            padding: 12px 30px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary-custom:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-        
-        .form-container {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 2rem;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .page-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 60px 0;
-            margin-bottom: 40px;
-        }
-        
-        .feature-card {
-            transition: transform 0.3s ease;
-            border: none;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            height: 100%;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .color-palette {
-            display: flex;
-            gap: 10px;
-            margin: 20px 0;
-        }
-        
-        .color-sample {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 3px solid white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        .navbar-brand {
-            font-weight: bold;
-            color: #667eea !important;
-        }
-        
-        .alert {
-            border-radius: 10px;
-        }
-        
-        .btn-outline-primary {
-            border-color: #667eea;
-            color: #667eea;
-        }
-        
-        .btn-outline-primary:hover {
-            background-color: #667eea;
-            border-color: #667eea;
-        }
-        
-        .text-primary {
-            color: #667eea !important;
-        }
-        
-        .bg-primary {
-            background-color: #667eea !important;
-        }
-    </style>
-    
+    <!-- Link to custom CSS with Art Nouveau fonts -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Color Season - Color Type Analysis{% endblock %}</title>
+
+    <!-- Bootstrap 5, but we will override some styles -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+ 
+
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <nav class="navbar navbar-expand-lg shadow-sm">
         <div class="container">
             <a class="navbar-brand fw-bold text-primary" href="{% url 'color_analyzer:strona_glowna' %}">
                 <i class="fas fa-palette me-2"></i>Color Season
@@ -109,27 +34,27 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'color_analyzer:strona_glowna' %}">Strona główna</a>
+                        <a class="nav-link" href="{% url 'color_analyzer:strona_glowna' %}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'color_analyzer:typy_kolorystyczne' %}">Typy kolorystyczne</a>
+                        <a class="nav-link" href="{% url 'color_analyzer:typy_kolorystyczne' %}">Color Types</a>
                     </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'color_analyzer:historia_analiz' %}">Moje analizy</a>
+                            <a class="nav-link" href="{% url 'color_analyzer:historia_analiz' %}">My Analyses</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'color_analyzer:profil_uzytkownika' %}">Profil</a>
+                            <a class="nav-link" href="{% url 'color_analyzer:profil_uzytkownika' %}">Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'color_analyzer:logout' %}">Wyloguj</a>
+                            <a class="nav-link" href="{% url 'color_analyzer:logout' %}">Logout</a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'color_analyzer:login' %}">Zaloguj</a>
+                            <a class="nav-link" href="{% url 'color_analyzer:login' %}">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'color_analyzer:rejestracja' %}">Zarejestruj</a>
+                            <a class="nav-link" href="{% url 'color_analyzer:rejestracja' %}">Register</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -153,16 +78,16 @@
         {% endblock %}
     </main>
 
-    <footer class="bg-dark text-white py-4 mt-5">
+    <footer>
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
                     <h5><i class="fas fa-palette me-2"></i>Color Season</h5>
-                    <p class="text-muted">Profesjonalna analiza typu kolorystycznego online</p>
+                    <p class="text-muted">Professional online color type analysis</p>
                 </div>
                 <div class="col-md-6 text-md-end">
                     <p class="text-muted mb-0">
-                        &copy; 2025 Color Season. Wszystkie prawa zastrzeżone.
+                        &copy; 2025 Color Season. All rights reserved.
                     </p>
                 </div>
             </div>
@@ -170,7 +95,6 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
     {% block extra_js %}{% endblock %}
 </body>
 </html>

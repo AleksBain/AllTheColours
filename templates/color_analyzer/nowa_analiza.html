@@ -1,122 +1,25 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Nowa Analiza Kolorystyczna{% endblock %}
-
+{% block title %}New Color Analysis{% endblock %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
-<style>
-    .upload-section {
-        background: #f8f9fa;
-        border: 2px dashed #dee2e6;
-        border-radius: 8px;
-        padding: 2rem;
-        text-align: center;
-        margin-bottom: 1.5rem;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-    
-    .upload-section:hover {
-        border-color: #0d6efd;
-        background: #e7f3ff;
-    }
-    
-    .upload-section.drag-over {
-        border-color: #0d6efd;
-        background: #e7f3ff;
-        transform: scale(1.02);
-    }
-    
-    .upload-icon {
-        font-size: 3rem;
-        color: #6c757d;
-        margin-bottom: 1rem;
-    }
-    
-    .preview-container {
-        display: none;
-        margin-top: 1rem;
-    }
-    
-    .preview-image {
-        max-width: 200px;
-        max-height: 200px;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    
-    .form-section {
-        background: white;
-        border-radius: 12px;
-        padding: 2rem;
-        margin-bottom: 2rem;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    
-    .section-title {
-        color: #495057;
-        border-bottom: 2px solid #e9ecef;
-        padding-bottom: 0.5rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .file-info {
-        font-size: 0.9rem;
-        color: #6c757d;
-        margin-top: 0.5rem;
-    }
-    
-    .btn-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border: none;
-        padding: 12px 30px;
-        font-weight: 500;
-    }
-    
-    .btn-secondary {
-        background: #6c757d;
-        border: none;
-        padding: 12px 30px;
-    }
-    
-    .progress-container {
-        display: none;
-        margin-top: 1rem;
-    }
 
-    .cropper-controls {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 8px;
-    padding: 8px;
-    margin: 10px 0;
-}
-
-.cropper-controls .btn {
-    margin: 0 2px;
-    min-width: 40px;
-}
-
-.crop-btn.btn-outline-success {
-    border-color: #28a745;
-    color: #28a745;
-}
-</style>
 {% endblock %}
 
 {% block content %}
 <head>
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
-    </head>
+</head>
 
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="text-center mb-4">
-                <h1 class="display-5 fw-bold text-primary">Nowa Analiza Kolorystyczna</h1>
-                <p class="lead text-muted">Prześlij zdjęcia, aby przeprowadzić analizę Twojego typu kolorystycznego</p>
+                <h1 class="display-5 fw-bold text-primary">New Color Analysis</h1>
+                <p class="lead text-muted">Upload photos to analyze your color type</p>
             </div>
 
             {% if messages %}
@@ -131,7 +34,7 @@
             <form method="post" enctype="multipart/form-data" id="analizaForm">
                 {% csrf_token %}
                 
-                <!-- Zdjęcie nadgarstka -->
+                <!-- Wrist photo -->
                 <div class="form-section">
                     <h3 class="section-title">
                         <i class="fas fa-hand-paper me-2"></i>
@@ -141,19 +44,19 @@
                         <div class="upload-icon">
                             <i class="fas fa-cloud-upload-alt"></i>
                         </div>
-                        <h5>Przeciągnij i upuść zdjęcie lub kliknij, aby wybrać</h5>
-                        <p class="text-muted">Zrób zdjęcie wewnętrznej strony nadgarstka przy naturalnym świetle</p>
+                        <h5>Drag and drop a photo or click to select</h5>
+                        <p class="text-muted">Take a photo of the inner wrist in natural light</p>
                         {{ form.zdjecie_nadgarstka }}
                         <div class="file-info">
-                            Maksymalny rozmiar: 5MB | Dozwolone formaty: JPG, PNG, GIF
+                            Max size: 5MB | Allowed formats: JPG, PNG, GIF
                         </div>
 
                         <div class="preview-container">
-                            <img class="preview-image" alt="Podgląd">
+                            <img class="preview-image" alt="Preview">
                         </div>
 
                         <div class="text-center mt-2">
-                            <button type="button" class="btn btn-outline-primary crop-btn">Przytnij</button>
+                            <button type="button" class="btn btn-outline-primary crop-btn">Crop</button>
                         </div>
                         <input type="hidden" class="cropped-data" name="cropped_{{ form.zdjecie_nadgarstka.name }}">
 
@@ -173,7 +76,7 @@
                     {% endif %}
                 </div>
 
-                <!-- Zdjęcie oczu -->
+                <!-- Eyes photo -->
                 <div class="form-section">
                     <h3 class="section-title">
                         <i class="fas fa-eye me-2"></i>
@@ -183,18 +86,18 @@
                         <div class="upload-icon">
                             <i class="fas fa-cloud-upload-alt"></i>
                         </div>
-                        <h5>Przeciągnij i upuść zdjęcie lub kliknij, aby wybrać</h5>
-                        <p class="text-muted">Zrób zbliżenie na oczy przy dobrym oświetleniu</p>
+                        <h5>Drag and drop a photo or click to select</h5>
+                        <p class="text-muted">Take a close-up of your eyes in good lighting</p>
                         {{ form.zdjecie_oczu }}
                         <div class="file-info">
-                            Maksymalny rozmiar: 5MB | Dozwolone formaty: JPG, PNG, GIF
+                            Max size: 5MB | Allowed formats: JPG, PNG, GIF
                         </div>
                         <div class="preview-container">
-                            <img class="preview-image" alt="Podgląd">
+                            <img class="preview-image" alt="Preview">
                         </div>
 
                         <div class="text-center mt-2">
-                            <button type="button" class="btn btn-outline-primary crop-btn">Przytnij</button>
+                            <button type="button" class="btn btn-outline-primary crop-btn">Crop</button>
                         </div>
                         <input type="hidden" class="cropped-data" name="cropped_{{ form.zdjecie_oczu.name }}">
 
@@ -214,7 +117,7 @@
                     {% endif %}
                 </div>
 
-                <!-- Zdjęcie włosów -->
+                <!-- Hair photo -->
                 <div class="form-section">
                     <h3 class="section-title">
                         <i class="fas fa-cut me-2"></i>
@@ -224,18 +127,18 @@
                         <div class="upload-icon">
                             <i class="fas fa-cloud-upload-alt"></i>
                         </div>
-                        <h5>Przeciągnij i upuść zdjęcie lub kliknij, aby wybrać</h5>
-                        <p class="text-muted">Zrób zdjęcie włosów przy naturalnym świetle</p>
+                        <h5>Drag and drop a photo or click to select</h5>
+                        <p class="text-muted">Take a photo of your hair in natural light</p>
                         {{ form.zdjecie_wlosow }}
                         <div class="file-info">
-                            Maksymalny rozmiar: 5MB | Dozwolone formaty: JPG, PNG, GIF
+                            Max size: 5MB | Allowed formats: JPG, PNG, GIF
                         </div>
                         <div class="preview-container">
-                            <img class="preview-image" alt="Podgląd">
+                            <img class="preview-image" alt="Preview">
                         </div>
 
                         <div class="text-center mt-2">
-                            <button type="button" class="btn btn-outline-primary crop-btn">Przytnij</button>
+                            <button type="button" class="btn btn-outline-primary crop-btn">Crop</button>
                         </div>
                         <input type="hidden" class="cropped-data" name="cropped_{{ form.zdjecie_wlosow.name }}">
 
@@ -255,15 +158,15 @@
                     {% endif %}
                 </div>
 
-                <!-- Przyciski -->
+                <!-- Buttons -->
                 <div class="form-section text-center">
                     <button type="submit" class="btn btn-primary btn-lg me-3">
                         <i class="fas fa-paper-plane me-2"></i>
-                        Wyślij do analizy
+                        Send for analysis
                     </button>
                     <a href="{% url 'color_analyzer:historia_analiz' %}" class="btn btn-secondary btn-lg">
                         <i class="fas fa-history me-2"></i>
-                        Historia Analiz
+                        Analysis History
                     </a>
                 </div>
             </form>
@@ -300,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!file) return;
 
             if (!file.type.startsWith('image/')) {
-                alert('Proszę wybrać plik obrazu.');
+                alert('Please select an image file.');
                 return;
             }
 
@@ -328,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
                     if (typeof Cropper === 'undefined') {
                         console.error('Cropper.js library is not loaded!');
-                        alert('Biblioteka Cropper.js nie jest załadowana. Sprawdź czy skrypt jest poprawnie dołączony do strony.');
+                        alert('Cropper.js library is not loaded. Please check if the script is properly included.');
                         return;
                     }
                     
@@ -378,7 +281,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     },
                                     error(error) {
                                         console.error(`Cropper error for ${fieldName}:`, error);
-                                        alert('Błąd podczas tworzenia narzędzia do przycinania.');
+                                        alert('Error creating cropping tool.');
                                     }
                                 });
                                 
@@ -386,25 +289,25 @@ document.addEventListener('DOMContentLoaded', function () {
                                 
                             } catch (innerError) {
                                 console.error(`Inner error creating cropper for ${fieldName}:`, innerError);
-                                alert('Błąd podczas tworzenia croppera: ' + innerError.message);
+                                alert('Error creating cropper: ' + innerError.message);
                             }
                         }, 50);
 
                     } catch (error) {
                         console.error(`Error initializing cropper for ${fieldName}:`, error);
-                        alert('Błąd podczas inicjalizacji narzędzia do przycinania: ' + error.message);
+                        alert('Error initializing cropping tool: ' + error.message);
                     }
                 };
 
                 preview.onerror = function() {
                     console.error(`Error loading image for ${fieldName}`);
-                    alert('Błąd podczas ładowania obrazu. Spróbuj wybrać inny plik.');
+                    alert('Error loading image. Try selecting another file.');
                 };
             };
 
             reader.onerror = function() {
                 console.error(`Error reading file for ${fieldName}`);
-                alert('Błąd podczas czytania pliku. Spróbuj ponownie.');
+                alert('Error reading file. Please try again.');
             };
 
             reader.readAsDataURL(file);
@@ -420,19 +323,19 @@ document.addEventListener('DOMContentLoaded', function () {
             
             if (!sectionData) {
                 console.error(`No section data found for ${fieldName}`);
-                alert('Błąd wewnętrzny. Spróbuj odświeżyć stronę.');
+                alert('Internal error. Please try refreshing the page.');
                 return;
             }
 
             const cropper = sectionData.cropper;
 
             if (!preview.src || preview.src === '') {
-                alert('Proszę najpierw wybrać zdjęcie.');
+                alert('Please select a photo first.');
                 return;
             }
 
             if (!cropper || !sectionData.isInitialized) {
-                alert('Narzędzie do przycinania nie jest jeszcze gotowe. Proszę poczekać chwilę i spróbować ponownie.');
+                alert('Cropping tool is not ready yet. Please wait a moment and try again.');
                 return;
             }
 
@@ -440,7 +343,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log(`Starting crop process for ${fieldName}`);
 
                 const originalText = cropBtn.innerHTML;
-                cropBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Przycinanie...';
+                cropBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cropping...';
                 cropBtn.disabled = true;
 
                 const canvas = cropper.getCroppedCanvas({
@@ -452,19 +355,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 if (!canvas) {
-                    throw new Error('Nie można wygenerować przyciętego obrazu');
+                    throw new Error('Cannot generate cropped image');
                 }
 
                 const croppedDataURL = canvas.toDataURL('image/jpeg', 0.92);
                 
                 if (!croppedDataURL || croppedDataURL === 'data:,') {
-                    throw new Error('Błąd podczas generowania danych obrazu');
+                    throw new Error('Error generating image data');
                 }
 
                 if (hiddenInput) {
                     hiddenInput.value = croppedDataURL;
                 } else {
-                    throw new Error('Nie można zapisać danych - brak ukrytego pola');
+                    throw new Error('Cannot save data - hidden input missing');
                 }
 
                 preview.src = croppedDataURL;
@@ -474,12 +377,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     controls.style.display = 'none';
                 }
 
-                cropBtn.innerHTML = '<i class="fas fa-check text-success"></i> Przycięte!';
+                cropBtn.innerHTML = '<i class="fas fa-check text-success"></i> Cropped!';
                 cropBtn.classList.remove('btn-outline-primary');
                 cropBtn.classList.add('btn-outline-success');
 
                 setTimeout(() => {
-                    cropBtn.innerHTML = '<i class="fas fa-edit"></i> Edytuj ponownie';
+                    cropBtn.innerHTML = '<i class="fas fa-edit"></i> Edit again';
                     cropBtn.disabled = false;
                     
                     cropBtn.onclick = function(e) {
@@ -490,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             controls.style.display = 'flex';
                         }
                         
-                        cropBtn.innerHTML = '<i class="fas fa-cut"></i> Przytnij';
+                        cropBtn.innerHTML = '<i class="fas fa-cut"></i> Crop';
                         cropBtn.classList.remove('btn-outline-success');
                         cropBtn.classList.add('btn-outline-primary');
                        
@@ -501,7 +404,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             } catch (error) {
                 console.error(`Error during crop process for ${fieldName}:`, error);
-                alert('Błąd podczas przycinania: ' + error.message);
+                alert('Error during cropping: ' + error.message);
                 
                 cropBtn.innerHTML = originalText;
                 cropBtn.disabled = false;
@@ -531,7 +434,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const files = e.dataTransfer.files;
             if (files.length) {
                 if (!files[0].type.startsWith('image/')) {
-                    alert('Proszę upuścić plik obrazu.');
+                    alert('Please drop an image file.');
                     return;
                 }
                 input.files = files;
@@ -550,19 +453,19 @@ document.addEventListener('DOMContentLoaded', function () {
         const controlsDiv = document.createElement('div');
         controlsDiv.className = 'cropper-controls mt-2 d-flex justify-content-center gap-2 flex-wrap';
         controlsDiv.innerHTML = `
-            <button type="button" class="btn btn-sm btn-outline-secondary zoom-in-btn" title="Powiększ">
+            <button type="button" class="btn btn-sm btn-outline-secondary zoom-in-btn" title="Zoom In">
                 <i class="fas fa-search-plus"></i>
             </button>
-            <button type="button" class="btn btn-sm btn-outline-secondary zoom-out-btn" title="Pomniejsz">
+            <button type="button" class="btn btn-sm btn-outline-secondary zoom-out-btn" title="Zoom Out">
                 <i class="fas fa-search-minus"></i>
             </button>
-            <button type="button" class="btn btn-sm btn-outline-secondary reset-btn" title="Resetuj">
+            <button type="button" class="btn btn-sm btn-outline-secondary reset-btn" title="Reset">
                 <i class="fas fa-undo"></i>
             </button>
-            <button type="button" class="btn btn-sm btn-outline-secondary rotate-left-btn" title="Obróć w lewo">
+            <button type="button" class="btn btn-sm btn-outline-secondary rotate-left-btn" title="Rotate Left">
                 <i class="fas fa-undo"></i>
             </button>
-            <button type="button" class="btn btn-sm btn-outline-secondary rotate-right-btn" title="Obróć w prawo">
+            <button type="button" class="btn btn-sm btn-outline-secondary rotate-right-btn" title="Rotate Right">
                 <i class="fas fa-redo"></i>
             </button>
         `;
@@ -631,7 +534,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (hasError) {
             e.preventDefault();
             console.log('Form validation failed. Missing fields:', missingFields);
-            alert('Proszę przesłać i przytnąć wszystkie wymagane zdjęcia przed wysłaniem formularza.');
+            alert('Please upload and crop all required photos before submitting the form.');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
             console.log('Form validation passed');

@@ -17,7 +17,9 @@ class TypKolorystyczny(models.Model):
         ('winter_clear', 'Czysta Zima'),
         ('winter_deep', 'Głęboka Zima'),
     ]
+    
     nazwa = models.CharField(max_length=50, choices=SEZONY, unique=True)
+    nazwa_publiczna = models.CharField(max_length=100, default='')
     opis = models.TextField()
     dominujaca_tonacja = models.CharField(max_length=20)
     poziom_kontrastu = models.CharField(max_length=20)
@@ -30,7 +32,10 @@ class TypKolorystyczny(models.Model):
         verbose_name_plural = "Typy Kolorystyczne"
 
     def __str__(self):
-        return self.get_nazwa_display()
+        return self.nazwa_publiczna or self.get_nazwa_display()
+
+    
+    
 
 class Analiza(models.Model):
     STATUS_CHOICES = [

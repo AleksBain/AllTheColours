@@ -1,10 +1,9 @@
-
 {% extends "base.html" %}
-{% block title %}Twój profil{% endblock %}
+{% block title %}Your Profile{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="mb-4">Twój profil</h2>
+    <h2 class="mb-4">Your Profile</h2>
     <div class="row">
         <div class="col-md-6">
             <form method="post" class="needs-validation" novalidate>
@@ -21,7 +20,7 @@
                         {% endfor %}
                     </div>
                 {% endfor %}
-                <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
             </form>
         </div>
         <div class="col-md-6">
@@ -29,10 +28,10 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ request.user.username }}</h5>
                     <p class="card-text"><strong>Email:</strong> {{ request.user.email }}</p>
-                    <p class="card-text"><strong>Data rejestracji:</strong> {{ request.user.date_joined|date:"d.m.Y" }}</p>
-                    <p class="card-text"><strong>Wiek:</strong> {{ profil.wiek|default:"-" }}</p>
-                    <p class="card-text"><strong>Płeć:</strong> {{ profil.get_plec_display|default:"-" }}</p>
-                    <p class="card-text"><strong>Ulubiony typ:</strong> {{ profil.ulubiony_typ.get_nazwa_display|default:"-" }}</p>
+                    <p class="card-text"><strong>Registration Date:</strong> {{ request.user.date_joined|date:"d.m.Y" }}</p>
+                    <p class="card-text"><strong>Age:</strong> {{ profil.wiek|default:"-" }}</p>
+                    <p class="card-text"><strong>Gender:</strong> {{ profil.get_plec_display|default:"-" }}</p>
+                    <p class="card-text"><strong>Favorite Type:</strong> {{ profil.ulubiony_typ.get_nazwa_display|default:"-" }}</p>
                 </div>
             </div>
         </div>

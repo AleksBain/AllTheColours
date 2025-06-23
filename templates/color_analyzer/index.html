@@ -1,138 +1,14 @@
 {% extends "base.html" %}
 {% load custom_filters %}
 {% load static %}
-{% block title %}Color Season - Analiza Typu Kolorystycznego{% endblock %}
+{% block title %}Color Season - Color Type Analysis{% endblock %}
 
 {% block extra_css %}
-<style>
-        .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 100px 0;
-            min-height: 70vh;
-            display: flex;
-            align-items: center;
-        }
-        
-        .feature-card {
-            transition: transform 0.3s ease;
-            border: none;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            height: 100%;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .color-palette {
-            display: flex;
-            gap: 10px;
-            margin: 20px 0;
-        }
-        
-        .color-sample {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 3px solid white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        .stats-counter {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #667eea;
-        }
-        
-        .btn-primary-custom {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            border: none;
-            padding: 12px 30px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary-custom:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
 
-        /* stylizacja wykresu */
-        .chart-section {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .chart-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="%23667eea" opacity="0.1"/><circle cx="80" cy="40" r="1" fill="%23764ba2" opacity="0.1"/><circle cx="40" cy="80" r="1" fill="%23667eea" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>') repeat;
-            opacity: 0.3;
-            pointer-events: none;
-        }
-        
-        .chart-container {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            position: relative;
-            z-index: 1;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .chart-title {
-            text-align: center;
-            color: #333;
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .chart-subtitle {
-            text-align: center;
-            color: #666;
-            font-size: 1rem;
-            margin-bottom: 30px;
-            font-weight: 500;
-        }
-        
-        .chart-wrapper {
-            position: relative;
-            height: 400px;
-        }
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
-        /* interakcja z wykresem */
-        @media (max-width: 768px) {
-            .chart-container {
-                padding: 25px;
-                margin: 0 15px;
-            }
-            
-            .chart-wrapper {
-                height: 300px;
-            }
-            
-            .chart-title {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
 {% endblock %}
+
 
 {% block content %}
 
@@ -142,11 +18,11 @@
             <div class="row align-items-center">
                 <div class="col-lg-6">
                     <h1 class="display-4 fw-bold mb-4">
-                        Odkryj swój typ kolorystyczny
+                        Discover your color type
                     </h1>
                     <p class="lead mb-4">
-                        Przesyłaj zdjęcia swojej skóry, włosów i oczu, a nasza aplikacja automatycznie określi 
-                        Twój typ kolorystyczny i wygeneruje spersonalizowaną paletę kolorów.
+                        Upload photos of your skin, hair, and eyes, and our app will automatically determine 
+                        your color type and generate a personalized color palette.
                     </p>
                     <div class="color-palette">
                         <div class="color-sample" style="background-color: #FF6B6B;"></div>
@@ -158,17 +34,17 @@
                     <div class="mt-4">
                         {% if user.is_authenticated %}
                             <a href="{% url 'color_analyzer:nowa_analiza' %}" class="btn btn-primary-custom btn-lg me-3">
-                                <i class="fas fa-camera me-2"></i>Rozpocznij analizę
+                                <i class="fas fa-camera me-2"></i>Start analysis
                             </a>
                             <a href="{% url 'color_analyzer:historia_analiz' %}" class="btn btn-outline-light btn-lg">
-                                <i class="fas fa-history me-2"></i>Moje analizy
+                                <i class="fas fa-history me-2"></i>My analyses
                             </a>
                         {% else %}
                             <a href="{% url 'color_analyzer:rejestracja' %}" class="btn btn-primary-custom btn-lg me-3">
-                                <i class="fas fa-user-plus me-2"></i>Załóż konto
+                                <i class="fas fa-user-plus me-2"></i>Create account
                             </a>
                             <a href="{% url 'color_analyzer:login' %}" class="btn btn-outline-light btn-lg">
-                                <i class="fas fa-sign-in-alt me-2"></i>Zaloguj się
+                                <i class="fas fa-sign-in-alt me-2"></i>Log in
                             </a>
                         {% endif %}
                     </div>
@@ -185,8 +61,8 @@
         <div class="container">
             <div class="row text-center mb-5">
                 <div class="col-12">
-                    <h2 class="display-5 fw-bold mb-3">Jak to działa?</h2>
-                    <p class="lead text-muted">Prosty proces w trzech krokach</p>
+                    <h2 class="display-5 fw-bold mb-3">How does it work?</h2>
+                    <p class="lead text-muted">A simple three-step process</p>
                 </div>
             </div>
             
@@ -197,9 +73,9 @@
                             <div class="mb-3">
                                 <i class="fas fa-image text-primary" style="font-size: 3rem;"></i>
                             </div>
-                            <h5 class="card-title">1. Prześlij zdjęcia</h5>
+                            <h5 class="card-title">1. Upload photos</h5>
                             <p class="card-text">
-                                Przesyłaj zdjęcia swojego nadgarstka, włosów i oczu w dobrym oświetleniu
+                                Upload photos of your wrist, hair, and eyes in good lighting
                             </p>
                         </div>
                     </div>
@@ -211,9 +87,9 @@
                             <div class="mb-3">
                                 <i class="fas fa-cogs text-primary" style="font-size: 3rem;"></i>
                             </div>
-                            <h5 class="card-title">2. Analiza AI</h5>
+                            <h5 class="card-title">2. AI analysis</h5>
                             <p class="card-text">
-                                Nasz algorytm analizuje tonację, nasycenie i kontrast Twojej pigmentacji
+                                Our algorithm analyzes the tone, saturation, and contrast of your pigmentation
                             </p>
                         </div>
                     </div>
@@ -225,9 +101,9 @@
                             <div class="mb-3">
                                 <i class="fas fa-file-pdf text-primary" style="font-size: 3rem;"></i>
                             </div>
-                            <h5 class="card-title">3. Otrzymaj raport</h5>
+                            <h5 class="card-title">3. Receive report</h5>
                             <p class="card-text">
-                                Pobierz spersonalizowany raport PDF z paletą kolorów i poradami stylistycznymi
+                                Download a personalized PDF report with a color palette and styling tips
                             </p>
                         </div>
                     </div>
@@ -240,8 +116,8 @@
 <section class="py-5 chart-section">
         <div class="container">
             <div class="chart-container">
-                <h2 class="chart-title">Popularność typów kolorystycznych</h2>
-                <p class="chart-subtitle">Na podstawie zakończonych analiz</p>
+                <h2 class="chart-title">Popularity of Color Types</h2>
+                <p class="chart-subtitle">Based on completed analyses</p>
                 
                 <div class="chart-wrapper">
                     <canvas id="typChart"></canvas>
@@ -257,19 +133,19 @@
             <div class="row text-center">
                 <div class="col-md-3">
                     <div class="stats-counter" id="users-count" data-count="{{ total_users }}">{{ total_users }}</div>
-                    <p class="text-muted">Zadowolonych użytkowników</p>
+                    <p class="text-muted">Satisfied users</p>
                 </div>
                 <div class="col-md-3">
                     <div class="stats-counter" id="analyses-count" data-count="{{ total_analiz }}">{{ total_analiz }}</div>
-                    <p class="text-muted">Wykonanych analiz</p>
+                    <p class="text-muted">Analyses performed</p>
                 </div>
                 <div class="col-md-3">
                     <div class="stats-counter" id="colors-count" data-count="{{ total_types }}">{{ total_types }}</div>
-                    <p class="text-muted">Typów kolorystycznych</p>
+                    <p class="text-muted">Color types</p>
                 </div>
                 <div class="col-md-3">
                     <div class="stats-counter" id="accuracy-count">94%</div>
-                    <p class="text-muted">Dokładność analizy</p>
+                    <p class="text-muted">Analysis accuracy</p>
                 </div>
             </div>
         </div>
@@ -280,8 +156,8 @@
         <div class="container">
             <div class="row text-center mb-5">
                 <div class="col-12">
-                    <h2 class="display-5 fw-bold mb-3">Typy kolorystyczne</h2>
-                    <p class="lead text-muted">Odkryj, do której grupy należysz</p>
+                    <h2 class="display-5 fw-bold mb-3">Color Types</h2>
+                    <p class="lead text-muted">Discover which group you belong to</p>
                 </div>
             </div>
             
@@ -289,7 +165,7 @@
                 <div class="col-md-3">
                     <div class="card feature-card">
                         <div class="card-body text-center">
-                            <h6 class="card-title">Wiosna</h6>
+                            <h6 class="card-title">Spring</h6>
                             <div class="color-palette justify-content-center">
                                 <div class="color-sample" style="background-color: #FFE135; width: 25px; height: 25px;"></div>
                                 <div class="color-sample" style="background-color: #FF6B35; width: 25px; height: 25px;"></div>
@@ -302,7 +178,7 @@
                 <div class="col-md-3">
                     <div class="card feature-card">
                         <div class="card-body text-center">
-                            <h6 class="card-title">Lato</h6>
+                            <h6 class="card-title">Summer</h6>
                             <div class="color-palette justify-content-center">
                                 <div class="color-sample" style="background-color: #A8DADC; width: 25px; height: 25px;"></div>
                                 <div class="color-sample" style="background-color: #F1FAEE; width: 25px; height: 25px;"></div>
@@ -315,7 +191,7 @@
                 <div class="col-md-3">
                     <div class="card feature-card">
                         <div class="card-body text-center">
-                            <h6 class="card-title">Jesień</h6>
+                            <h6 class="card-title">Autumn</h6>
                             <div class="color-palette justify-content-center">
                                 <div class="color-sample" style="background-color: #8B4513; width: 25px; height: 25px;"></div>
                                 <div class="color-sample" style="background-color: #D2691E; width: 25px; height: 25px;"></div>
@@ -328,7 +204,7 @@
                 <div class="col-md-3">
                     <div class="card feature-card">
                         <div class="card-body text-center">
-                            <h6 class="card-title">Zima</h6>
+                            <h6 class="card-title">Winter</h6>
                             <div class="color-palette justify-content-center">
                                 <div class="color-sample" style="background-color: #000080; width: 25px; height: 25px;"></div>
                                 <div class="color-sample" style="background-color: #800080; width: 25px; height: 25px;"></div>
@@ -341,7 +217,7 @@
             
             <div class="text-center mt-4">
                 <a href="{% url 'color_analyzer:typy_kolorystyczne' %}" class="btn btn-outline-primary btn-lg">
-                    <i class="fas fa-eye me-2"></i>Zobacz wszystkie typy
+                    <i class="fas fa-eye me-2"></i>See all types
                 </a>
             </div>
         </div>
@@ -349,7 +225,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<!-- (Wykres kołowy)-->
+<!-- (Pie chart) -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const typNames = JSON.parse('{{ typ_names_json|escapejs }}');
@@ -364,18 +240,18 @@
             datasets: [{
                 data: typCounts,
                 backgroundColor: [
-                    '#FFE135', // Wiosna - ciepły żółty
-                    '#87CEEB', // Lato - delikatny błękit
-                    '#D2691E', // Jesień - ciepły pomarańczowy
-                    '#4169E1', // Zima - intensywny niebieski
-                    '#98FB98', // Wiosna ciepła - jasnozielony
-                    '#B0C4DE', // Lato chłodne - stalowy niebieski
-                    '#CD853F', // Jesień ciepła - piaskowy brąz
-                    '#191970', // Zima głęboka - midnight blue
-                    '#F0E68C', // Wiosna jasna - khaki
-                    '#778899', // Lato miękkie - light slate gray
-                    '#A0522D', // Jesień głęboka - sienna
-                    '#000080'  // Zima jasna - navy
+                    '#FFE135', // Spring - warm yellow
+                    '#87CEEB', // Summer - soft blue
+                    '#D2691E', // Autumn - warm orange
+                    '#4169E1', // Winter - intense blue
+                    '#98FB98', // Warm Spring - light green
+                    '#B0C4DE', // Cool Summer - steel blue
+                    '#CD853F', // Warm Autumn - sandy brown
+                    '#191970', // Deep Winter - midnight blue
+                    '#F0E68C', // Light Spring - khaki
+                    '#778899', // Soft Summer - light slate gray
+                    '#A0522D', // Deep Autumn - sienna
+                    '#000080'  // Light Winter - navy
                 ],
                 borderColor: '#ffffff',
                 borderWidth: 4,
@@ -446,7 +322,7 @@
                             const value = context.parsed;
                             const total = context.dataset.data.reduce((a, b) => a + b, 0);
                             const percentage = ((value / total) * 100).toFixed(1);
-                            return `${label}: ${value} analiz (${percentage}%)`;
+                            return `${label}: ${value} analyses (${percentage}%)`;
                         }
                     }
                 }
@@ -484,7 +360,7 @@
                 
                 ctx.fillStyle = '#666';
                 ctx.font = '16px "Segoe UI"';
-                ctx.fillText('analiz', centerX, centerY + 15);
+                ctx.fillText('analyses', centerX, centerY + 15);
                 
                 ctx.restore();
             }
@@ -503,7 +379,7 @@
 </script>
 
 
-<!-- (Statystyki: użytkownicy, analizy, kolory) -->
+<!-- (Stats: users, analyses, colors) -->
 <script>
    
     function animateCounter(elementId, targetValue, duration = 2000) {
@@ -531,7 +407,7 @@
     });
 </script>
 
-<!-- Procent dokładności-->
+<!-- Accuracy percentage -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const accuracyElement = document.getElementById('accuracy-count');
@@ -549,7 +425,7 @@
     });
 </script>
 
-<!-- Płynne przewijanie do sekcji -->
+<!-- Smooth scroll to sections -->
 <script>
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {

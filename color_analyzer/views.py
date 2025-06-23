@@ -178,7 +178,7 @@ def pobierz_dominujace_kolory(image_path, liczba_kolorow=5, crop_coords=None):
         
         # Resize for faster processing (but not too small)
         # Use larger size for better color representation
-        image = image.resize((300, 300), Image.Resampling.LANCZOS)
+        image = image.resize((150, 150), Image.Resampling.LANCZOS)
         
         # Convert to numpy array
         pixels = np.array(image).reshape(-1, 3)
@@ -188,7 +188,7 @@ def pobierz_dominujace_kolory(image_path, liczba_kolorow=5, crop_coords=None):
         
         # Use more clusters initially, then merge similar colors
         initial_clusters = min(liczba_kolorow * 2, 10)
-        kmeans = KMeans(n_clusters=initial_clusters, random_state=42, n_init=10)
+        kmeans = KMeans(n_clusters=initial_clusters, random_state=42, n_init=2)
         kmeans.fit(pixels)
         
         # Get cluster centers and their labels

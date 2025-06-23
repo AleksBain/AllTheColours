@@ -1,167 +1,187 @@
 {% extends "base.html" %}
 {% load custom_filters %}
 {% load static %}
-{% block title %}Color Season - Color Type Analysis{% endblock %}
 
-{% block extra_css %}
-
-<link rel="stylesheet" href="{% static 'css/styles.css' %}">
-
+{# ---------------------- #}
+{# 1. Tytuł strony        #}
+{# ---------------------- #}
+{% block title %}
+    Palette Nouveau - Color Type Analysis
 {% endblock %}
 
+{# ---------------------- #}
+{# 2. Dodatkowe style CSS #}
+{# ---------------------- #}
+{% block extra_css %}
+    <!-- Podłączamy własny plik CSS ze stylami Art Nouveau -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% endblock %}
 
+{# ---------------------- #}
+{# 3. Zawartość strony    #}
+{# ---------------------- #}
 {% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <h1 class="display-4 fw-bold mb-4">
-                        Discover your color type
-                    </h1>
-                    <p class="lead mb-4">
-                        Upload photos of your skin, hair, and eyes, and our app will automatically determine 
-                        your color type and generate a personalized color palette.
-                    </p>
-                    <div class="color-palette">
-                        <div class="color-sample" style="background-color: #FF6B6B;"></div>
-                        <div class="color-sample" style="background-color: #4ECDC4;"></div>
-                        <div class="color-sample" style="background-color: #45B7D1;"></div>
-                        <div class="color-sample" style="background-color: #96CEB4;"></div>
-                        <div class="color-sample" style="background-color: #FECA57;"></div>
-                    </div>
-                    <div class="mt-4">
-                        {% if user.is_authenticated %}
-                            <a href="{% url 'color_analyzer:nowa_analiza' %}" class="btn btn-primary-custom btn-lg me-3">
-                                <i class="fas fa-camera me-2"></i>Start analysis
-                            </a>
-                            <a href="{% url 'color_analyzer:historia_analiz' %}" class="btn btn-outline-light btn-lg">
-                                <i class="fas fa-history me-2"></i>My analyses
-                            </a>
-                        {% else %}
-                            <a href="{% url 'color_analyzer:rejestracja' %}" class="btn btn-primary-custom btn-lg me-3">
-                                <i class="fas fa-user-plus me-2"></i>Create account
-                            </a>
-                            <a href="{% url 'color_analyzer:login' %}" class="btn btn-outline-light btn-lg">
-                                <i class="fas fa-sign-in-alt me-2"></i>Log in
-                            </a>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="col-lg-6 text-center">
-                    <i class="fas fa-palette" style="font-size: 12rem; opacity: 0.1;"></i>
-                </div>
+
+
+<!-- Hero wrapper -->
+<div class="hero-wrapper position-relative" style="margin-top: 0; position: relative; z-index: 1;">
+
+  <!-- Sekcja HERO -->
+  <section class="hero-section d-flex align-items-center position-relative">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap">
+      <div class="hero-text col-lg-6 col-md-12 mb-4" style="max-width: 90%;">
+  <h1 class="display-title" style="margin-left: -100px;">
+          Let one image reveal the hues of your essence.<br />
+          Find your authentic colors.
+        </h1>
+      </div>
+      <div class="hero-image col-lg-6 col-md-12 text-center">
+        <img src="{% static 'images/main2.png' %}" alt="Color Season Artwork" class="img-fluid rounded shadow" />
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div style="width: 100%; display: flex; justify-content: center; align-items: center; padding: 0; margin-top: -350px; position: relative; z-index: 10;">
+  <img src="{% static 'images/border_down.svg' %}" alt="Dekoracja" style="max-width: 100%; height: auto; display: block; object-fit: contain;" />
+</div>
+
+<!-- Features Section - trzy kroki działania aplikacji -->
+<section class="pt-0 pb-5 position-relative">
+   
+    
+    <div class="container">
+        <!-- Nagłówek sekcji -->
+        <div class="row text-center mb-4">
+            <div class="col-12">
+                <h2 class="display-5 fw-bold mb-3">How does it work?</h2>
+                <p class="lead text-muted">A simple three-step process</p>
             </div>
         </div>
-    </section>
 
-    <!-- Features Section -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row text-center mb-5">
-                <div class="col-12">
-                    <h2 class="display-5 fw-bold mb-3">How does it work?</h2>
-                    <p class="lead text-muted">A simple three-step process</p>
+
+<!-- Karty z funkcjami -->
+<div class="row g-4">  <!-- ⬅️ TO BYŁO POMINIĘTE -->
+    <!-- 1. Upload photos -->
+    <div class="col-md-4">
+        <div class="card feature-card text-center p-4 h-100 d-flex flex-column">
+            <div class="card-body flex-grow-1 d-flex flex-column justify-content-center">
+                <div class="mb-3">
+                    <i class="fas fa-image text-muted" style="font-size: 3rem;"></i>
                 </div>
-            </div>
-            
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card feature-card text-center p-4">
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <i class="fas fa-image text-primary" style="font-size: 3rem;"></i>
-                            </div>
-                            <h5 class="card-title">1. Upload photos</h5>
-                            <p class="card-text">
-                                Upload photos of your wrist, hair, and eyes in good lighting
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-4">
-                    <div class="card feature-card text-center p-4">
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <i class="fas fa-cogs text-primary" style="font-size: 3rem;"></i>
-                            </div>
-                            <h5 class="card-title">2. AI analysis</h5>
-                            <p class="card-text">
-                                Our algorithm analyzes the tone, saturation, and contrast of your pigmentation
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-4">
-                    <div class="card feature-card text-center p-4">
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <i class="fas fa-file-pdf text-primary" style="font-size: 3rem;"></i>
-                            </div>
-                            <h5 class="card-title">3. Receive report</h5>
-                            <p class="card-text">
-                                Download a personalized PDF report with a color palette and styling tips
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                <h5 class="card-title">1. Upload photos</h5>
+                <p class="card-text">
+                    Upload photos of your wrist, hair, and eyes in good lighting
+                </p>
             </div>
         </div>
-    </section>
+    </div>
 
-     <!--Pie chart -->
-<section class="py-5 chart-section">
-        <div class="container">
-            <div class="chart-container">
-                <h2 class="chart-title">Popularity of Color Types</h2>
-                <p class="chart-subtitle">Based on completed analyses</p>
-                
-                <div class="chart-wrapper">
-                    <canvas id="typChart"></canvas>
+    <!-- 2. AI analysis -->
+    <div class="col-md-4">
+        <div class="card feature-card text-center p-4 h-100 d-flex flex-column">
+            <div class="card-body flex-grow-1 d-flex flex-column justify-content-center">
+                <div class="mb-3">
+                    <i class="fas fa-cogs text-muted" style="font-size: 3rem;"></i>
                 </div>
+                <h5 class="card-title">2. AI analysis</h5>
+                <p class="card-text">
+                    Our algorithm analyzes the tone, saturation, and contrast of your pigmentation
+                </p>
             </div>
         </div>
+    </div>
+
+    <!-- 3. Receive report -->
+    <div class="col-md-4">
+        <div class="card feature-card text-center p-4 h-100 d-flex flex-column">
+            <div class="card-body flex-grow-1 d-flex flex-column justify-content-center">
+                <div class="mb-3">
+                    <i class="fas fa-file-pdf text-muted" style="font-size: 3rem;"></i>
+                </div>
+                <h5 class="card-title">3. Receive report</h5>
+                <p class="card-text">
+                    Download a personalized PDF report with a color palette and styling tips
+                </p>
+            </div>
+        </div>
+    </div>
+</div> <!-- ⬅️ zamknięcie .row -->
 </section>
 
+    <!-- Pie Chart Section - wykres popularności typów kolorystycznych -->
+    <section class="py-5 chart-section">
+        <div class="container">
+            <div class="chart-container">
+                <h2 class="chart-title" style="font-size: 36px;">Popularity of Color Types</h2>
+                <p class="chart-subtitle" style="font-size: 24px;">Based on completed analyses</p>
 
-    <!-- Stats Section -->
+                <div class="chart-wrapper">
+                    <canvas id="typChart"></canvas> <!-- Miejsce na wykres -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section - statystyki użytkowników, analiz i typów -->
     <section class="bg-light py-5">
         <div class="container">
             <div class="row text-center">
+
+                <!-- Liczba zadowolonych użytkowników -->
                 <div class="col-md-3">
-                    <div class="stats-counter" id="users-count" data-count="{{ total_users }}">{{ total_users }}</div>
-                    <p class="text-muted">Satisfied users</p>
+                    <div class="stats-counter" id="users-count" data-count="{{ total_users }}">
+                        {{ total_users }}
+                    </div>
+                    <p class="text-muted" style="font-family: 'Teutonic', serif; font-size: 24px;">Satisfied users</p>
+
                 </div>
+
+                <!-- Liczba wykonanych analiz -->
                 <div class="col-md-3">
-                    <div class="stats-counter" id="analyses-count" data-count="{{ total_analiz }}">{{ total_analiz }}</div>
-                    <p class="text-muted">Analyses performed</p>
+                    <div class="stats-counter" id="analyses-count" data-count="{{ total_analiz }}">
+                        {{ total_analiz }}
+                    </div>
+                    <p class="text-muted" style="font-family: 'Teutonic', serif; font-size: 24px;">Analyses performed</p>
                 </div>
+
+                <!-- Liczba dostępnych typów kolorystycznych -->
                 <div class="col-md-3">
-                    <div class="stats-counter" id="colors-count" data-count="{{ total_types }}">{{ total_types }}</div>
-                    <p class="text-muted">Color types</p>
+                    <div class="stats-counter" id="colors-count" data-count="{{ total_types }}">
+                        {{ total_types }}
+                    </div>
+                    <p class="text-muted" style="font-family: 'Teutonic', serif; font-size: 24px;">Color types</p>
                 </div>
+
+                <!-- Dokładność analizy -->
                 <div class="col-md-3">
                     <div class="stats-counter" id="accuracy-count">94%</div>
-                    <p class="text-muted">Analysis accuracy</p>
+                    <p class="text-muted" style="font-family: 'Teutonic', serif; font-size: 24px;">Analysis accuracy</p>
                 </div>
+
             </div>
         </div>
     </section>
 
-    <!-- Color Types Preview -->
+    <!-- Color Types Preview Section - podgląd typów kolorystycznych -->
     <section class="py-5">
         <div class="container">
+
+            <!-- Nagłówek sekcji -->
             <div class="row text-center mb-5">
                 <div class="col-12">
                     <h2 class="display-5 fw-bold mb-3">Color Types</h2>
                     <p class="lead text-muted">Discover which group you belong to</p>
                 </div>
             </div>
-            
+
+            <!-- Karty typów kolorystycznych z paletami -->
             <div class="row g-4">
+
+                <!-- Spring -->
                 <div class="col-md-3">
                     <div class="card feature-card">
                         <div class="card-body text-center">
@@ -174,7 +194,8 @@
                         </div>
                     </div>
                 </div>
-                
+
+                <!-- Summer -->
                 <div class="col-md-3">
                     <div class="card feature-card">
                         <div class="card-body text-center">
@@ -187,7 +208,8 @@
                         </div>
                     </div>
                 </div>
-                
+
+                <!-- Autumn -->
                 <div class="col-md-3">
                     <div class="card feature-card">
                         <div class="card-body text-center">
@@ -200,7 +222,8 @@
                         </div>
                     </div>
                 </div>
-                
+
+                <!-- Winter -->
                 <div class="col-md-3">
                     <div class="card feature-card">
                         <div class="card-body text-center">
@@ -213,175 +236,194 @@
                         </div>
                     </div>
                 </div>
+
             </div>
-            
+
+            <!-- Przycisk prowadzący do wszystkich typów -->
             <div class="text-center mt-4">
-                <a href="{% url 'color_analyzer:typy_kolorystyczne' %}" class="btn btn-outline-primary btn-lg">
+                <a href="{% url 'color_analyzer:typy_kolorystyczne' %}" class="btn-artnouveau btn-lg"
+                class="btn btn-outline-primary btn-lg"
+                style="font-family: 'Teutonic', serif;">
                     <i class="fas fa-eye me-2"></i>See all types
                 </a>
             </div>
         </div>
+
+ 
+
     </section>
+
 {% endblock %}
 
+{# ---------------------- #}
+{# 4. Dodatkowe skrypty JS #}
+{# ---------------------- #}
+
 {% block extra_js %}
-<!-- (Pie chart) -->
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const typNames = JSON.parse('{{ typ_names_json|escapejs }}');
+    // MAPA nazw technicznych -> ładne
+    const PRETTY_NAMES = {
+        'spring_light': 'Light Spring',
+        'spring_warm': 'Warm Spring',
+        'spring_clear': 'Clear Spring',
+        'summer_light': 'Light Summer',
+        'summer_cool': 'Cool Summer',
+        'summer_soft': 'Soft Summer',
+        'autumn_soft': 'Soft Autumn',
+        'autumn_warm': 'Warm Autumn',
+        'autumn_deep': 'Deep Autumn',
+        'winter_cool': 'Cool Winter',
+        'winter_clear': 'Clear Winter',
+        'winter_deep': 'Deep Winter',
+    };
+
+    // Dane z Django (surowe techniczne nazwy)
+    const typNamesRaw = JSON.parse('{{ typ_names_json|escapejs }}');
     const typCounts = JSON.parse('{{ typ_counts_json|escapejs }}');
 
-    const ctx = document.getElementById('typChart').getContext('2d');
-    
-    const typChart = new Chart(ctx, {
-        type: 'doughnut', 
-        data: {
-            labels: typNames,
-            datasets: [{
-                data: typCounts,
-                backgroundColor: [
-                    '#FFE135', // Spring - warm yellow
-                    '#87CEEB', // Summer - soft blue
-                    '#D2691E', // Autumn - warm orange
-                    '#4169E1', // Winter - intense blue
-                    '#98FB98', // Warm Spring - light green
-                    '#B0C4DE', // Cool Summer - steel blue
-                    '#CD853F', // Warm Autumn - sandy brown
-                    '#191970', // Deep Winter - midnight blue
-                    '#F0E68C', // Light Spring - khaki
-                    '#778899', // Soft Summer - light slate gray
-                    '#A0522D', // Deep Autumn - sienna
-                    '#000080'  // Light Winter - navy
-                ],
-                borderColor: '#ffffff',
-                borderWidth: 4,
-                hoverBorderWidth: 6,
-                hoverOffset: 15,
-                spacing: 3
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: '60%',
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 25,
-                        usePointStyle: true,
-                        pointStyle: 'circle',
-                        font: {
-                            size: 14,
-                            weight: '600',
-                            family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
-                        },
-                        color: '#333',
-                        generateLabels: function(chart) {
-                            const data = chart.data;
-                            if (data.labels.length && data.datasets.length) {
-                                return data.labels.map((label, i) => {
-                                    const dataset = data.datasets[0];
-                                    const value = dataset.data[i];
-                                    const total = dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = ((value / total) * 100).toFixed(1);
-                                    
-                                    return {
-                                        text: `${label} (${percentage}%)`,
-                                        fillStyle: dataset.backgroundColor[i],
-                                        strokeStyle: dataset.backgroundColor[i],
-                                        lineWidth: 0,
-                                        pointStyle: 'circle',
-                                        hidden: isNaN(dataset.data[i]) || chart.getDatasetMeta(0).data[i].hidden,
-                                        index: i
-                                    };
-                                });
-                            }
-                            return [];
-                        }
-                    }
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    titleColor: '#fff',
-                    bodyColor: '#fff',
-                    borderColor: '#667eea',
-                    borderWidth: 2,
-                    cornerRadius: 10,
-                    displayColors: true,
-                    titleFont: {
-                        size: 16,
-                        weight: 'bold'
-                    },
-                    bodyFont: {
-                        size: 14
-                    },
-                    callbacks: {
-                        label: function(context) {
-                            const label = context.label || '';
-                            const value = context.parsed;
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = ((value / total) * 100).toFixed(1);
-                            return `${label}: ${value} analyses (${percentage}%)`;
-                        }
-                    }
-                }
-            },
-            animation: {
-                animateRotate: true,
-                animateScale: true,
-                duration: 2000,
-                easing: 'easeInOutQuart'
-            },
-            interaction: {
-                intersect: false,
-                mode: 'point'
-            },
-            onHover: (event, activeElements) => {
-                event.native.target.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
-            }
-        },
-        plugins: [{
-            id: 'centerText',
-            beforeDraw: function(chart) {
-                const ctx = chart.ctx;
-                const centerX = chart.getDatasetMeta(0).data[0].x;
-                const centerY = chart.getDatasetMeta(0).data[0].y;
-                
-                ctx.save();
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                
-                
-                const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-                ctx.fillStyle = '#333';
-                ctx.font = 'bold 28px "Segoe UI"';
-                ctx.fillText(total, centerX, centerY - 10);
-                
-                ctx.fillStyle = '#666';
-                ctx.font = '16px "Segoe UI"';
-                ctx.fillText('analyses', centerX, centerY + 15);
-                
-                ctx.restore();
-            }
-        }]
-    });
+    // Zamieniamy na ładne nazwy
+    const typNames = typNamesRaw.map(nazwa => PRETTY_NAMES[nazwa] || nazwa);
 
-    
-    typChart.canvas.addEventListener('click', (e) => {
-        const points = typChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
-        if (points.length) {
-            const firstPoint = points[0];
-            
-            typChart.update('none');
-        }
-    });
+    let typChartInitialized = false;
+    const chartObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !typChartInitialized) {
+                typChartInitialized = true;
+                const ctx = document.getElementById('typChart').getContext('2d');
+
+                const typChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: typNames,
+                        datasets: [{
+                            data: typCounts,
+                            backgroundColor: [
+                                '#FFE135', '#87CEEB', '#D2691E', '#4169E1',
+                                '#98FB98', '#B0C4DE', '#CD853F', '#191970',
+                                '#F0E68C', '#778899', '#A0522D', '#000080'
+                            ],
+                            borderColor: '#ffffff',
+                            borderWidth: 2,
+                            hoverBorderWidth: 4,
+                            hoverOffset: 15,
+                            spacing: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '60%',
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 25,
+                                    usePointStyle: true,
+                                    pointStyle: 'circle',
+                                    font: {
+                                        size: 15,
+                                        weight: '600',
+                                        family: "Teutonic"
+                                    },
+                                    color: '#333',
+                                    generateLabels: function (chart) {
+                                        const data = chart.data;
+                                        if (data.labels.length && data.datasets.length) {
+                                            return data.labels.map((label, i) => {
+                                                const dataset = data.datasets[0];
+                                                const value = dataset.data[i];
+                                                const total = dataset.data.reduce((a, b) => a + b, 0);
+                                                const percentage = ((value / total) * 100).toFixed(1);
+                                                return {
+                                                    text: `${label} (${percentage}%)`,
+                                                    fillStyle: dataset.backgroundColor[i],
+                                                    strokeStyle: dataset.backgroundColor[i],
+                                                    lineWidth: 0,
+                                                    pointStyle: 'circle',
+                                                    hidden: isNaN(dataset.data[i]) || chart.getDatasetMeta(0).data[i].hidden,
+                                                    index: i
+                                                };
+                                            });
+                                        }
+                                        return [];
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#fff',
+                                bodyColor: '#fff',
+                                borderColor: '#667eea',
+                                borderWidth: 2,
+                                cornerRadius: 10,
+                                displayColors: true,
+                                titleFont: {
+                                    size: 16,
+                                    weight: 'bold',
+                                    family: "Teutonic"
+                                },
+                                bodyFont: {
+                                    size: 14,
+                                    family: "Teutonic"
+                                },
+                                callbacks: {
+                                    label: function (context) {
+                                        const label = context.label || '';
+                                        const value = context.parsed;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = ((value / total) * 100).toFixed(1);
+                                        return `${label}: ${value} analyses (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        },
+                        animation: {
+                            animateRotate: true,
+                            animateScale: false,
+                            duration: 2000,
+                            easing: 'easeInOutQuart'
+                        },
+                        interaction: {
+                            intersect: false,
+                            mode: 'point'
+                        },
+                        onHover: (event, activeElements) => {
+                            event.native.target.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
+                        }
+                    },
+                    plugins: [{
+                        id: 'centerText',
+                        beforeDraw: function (chart) {
+                            const ctx = chart.ctx;
+                            const centerX = chart.getDatasetMeta(0).data[0].x;
+                            const centerY = chart.getDatasetMeta(0).data[0].y;
+                            ctx.save();
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                            ctx.fillStyle = '#333';
+                            ctx.font = 'bold 28px "Teutonic", serif';
+                            ctx.fillText(total, centerX, centerY - 10);
+                            ctx.fillStyle = '#666';
+                            ctx.font = 'bold 16px "Teutonic", serif';
+                            ctx.fillText('analyses', centerX, centerY + 15);
+                            ctx.restore();
+                        }
+                    }]
+                });
+
+                observer.disconnect();
+            }
+        });
+    }, { threshold: 0.5 });
+
+    chartObserver.observe(document.getElementById('typChart'));
 </script>
 
-
-<!-- (Stats: users, analyses, colors) -->
+<!-- Liczniki i dokładność po scrollu -->
 <script>
-   
     function animateCounter(elementId, targetValue, duration = 2000) {
         const element = document.getElementById(elementId);
         const startValue = 0;
@@ -399,33 +441,38 @@
         }, 16);
     }
 
+    let statsTriggered = false;
+    const statsObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !statsTriggered) {
+                statsTriggered = true;
 
-    document.addEventListener('DOMContentLoaded', function () {
-        animateCounter('users-count', parseInt(document.getElementById('users-count').dataset.count));
-        animateCounter('analyses-count', parseInt(document.getElementById('analyses-count').dataset.count));
-        animateCounter('colors-count', parseInt(document.getElementById('colors-count').dataset.count));
-    });
-</script>
+                animateCounter('users-count', parseInt(document.getElementById('users-count').dataset.count));
+                animateCounter('analyses-count', parseInt(document.getElementById('analyses-count').dataset.count));
+                animateCounter('colors-count', parseInt(document.getElementById('colors-count').dataset.count));
 
-<!-- Accuracy percentage -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const accuracyElement = document.getElementById('accuracy-count');
-        let currentAccuracy = 0;
+                // animacja dokładności
+                const accuracyElement = document.getElementById('accuracy-count');
+                let currentAccuracy = 0;
+                const accuracyTimer = setInterval(() => {
+                    currentAccuracy += 1;
+                    if (currentAccuracy >= 94) {
+                        accuracyElement.textContent = '94%';
+                        clearInterval(accuracyTimer);
+                    } else {
+                        accuracyElement.textContent = currentAccuracy + '%';
+                    }
+                }, 20);
 
-        const accuracyTimer = setInterval(() => {
-            currentAccuracy += 1;
-            if (currentAccuracy >= 94) {
-                accuracyElement.textContent = '94%';
-                clearInterval(accuracyTimer);
-            } else {
-                accuracyElement.textContent = currentAccuracy + '%';
+                observer.disconnect();
             }
-        }, 20);
-    });
+        });
+    }, { threshold: 0.5 });
+
+    statsObserver.observe(document.querySelector('.stats-counter'));
 </script>
 
-<!-- Smooth scroll to sections -->
+<!-- Smooth scroll (pozostawiam) -->
 <script>
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -436,5 +483,4 @@
         });
     });
 </script>
-
 {% endblock %}

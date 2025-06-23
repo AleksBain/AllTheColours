@@ -2,99 +2,87 @@
 <html lang="en">
 <head>
     {% load static %}
-    
-    <!-- Link to custom CSS with Art Nouveau fonts -->
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{% block title %}Color Season - Color Type Analysis{% endblock %}</title>
 
-    <!-- Bootstrap 5, but we will override some styles -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
- 
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold text-primary" href="{% url 'color_analyzer:strona_glowna' %}">
-                <i class="fas fa-palette me-2"></i>Color Season
-            </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'color_analyzer:strona_glowna' %}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'color_analyzer:typy_kolorystyczne' %}">Color Types</a>
-                    </li>
-                    {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'color_analyzer:historia_analiz' %}">My Analyses</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'color_analyzer:profil_uzytkownika' %}">Profile</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'color_analyzer:logout' %}">Logout</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'color_analyzer:login' %}">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'color_analyzer:rejestracja' %}">Register</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
 
+    <!-- Nawigacja -->
+    {% include "color_analyzer/navbar.html" %}
+
+    <!-- Komunikaty (sukces/błąd) -->
     {% if messages %}
-        <div class="container mt-3">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            {% endfor %}
-        </div>
+    <div class="container mt-3">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
     {% endif %}
 
+    <!-- Główna zawartość strony -->
     <main>
-        {% block content %}
-        {% endblock %}
+        {% block content %}{% endblock %}
     </main>
 
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5><i class="fas fa-palette me-2"></i>Color Season</h5>
-                    <p class="text-muted">Professional online color type analysis</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p class="text-muted mb-0">
-                        &copy; 2025 Color Season. All rights reserved.
-                    </p>
+    <!-- Stopka -->
+    <footer class="bg-light py-3 mt-5 border-top">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- Left column -->
+            <div class="col-md-6 d-flex align-items-center">
+                
+                <div>
+                    <span class="fw-bold" style="color: #212529;">Pallette Nouveau</span>
+                    <small class="text-muted ms-2">Professional online color type analysis</small>
                 </div>
             </div>
+            <!-- Right column -->
+            <div class="col-md-6 text-md-end mt-2 mt-md-0">
+                <p class="text-muted mb-0">&copy; 2025 Pallette Nouveau. All rights reserved.</p>
+            </div>
         </div>
-    </footer>
+    </div>
+</footer>
 
+
+    <!-- Błąd ogólny -->
+    {% if error_message %}
+    <div class="container mt-3">
+        <div class="alert alert-danger">
+            <strong>Błąd:</strong> {{ error_message }}
+            <br>
+            <small>Strona działa w trybie awaryjnym. Skontaktuj się z administratorem.</small>
+        </div>
+    </div>
+    {% endif %}
+
+   
+    </div>
+</div>
+
+
+    
+
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Dodatkowe skrypty -->
     {% block extra_js %}{% endblock %}
 </body>
 </html>

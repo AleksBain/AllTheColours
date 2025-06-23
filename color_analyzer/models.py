@@ -4,19 +4,20 @@ from django.utils import timezone
 
 class TypKolorystyczny(models.Model):
     SEZONY = [
-        ('spring_light', 'Jasna Wiosna'),
-        ('spring_warm', 'Ciepła Wiosna'),
-        ('spring_clear', 'Czysta Wiosna'),
-        ('summer_light', 'Jasne Lato'),
-        ('summer_cool', 'Chłodne Lato'),
-        ('summer_soft', 'Miękkie Lato'),
-        ('autumn_soft', 'Miękka Jesień'),
-        ('autumn_warm', 'Ciepła Jesień'),
-        ('autumn_deep', 'Głęboka Jesień'),
-        ('winter_cool', 'Chłodna Zima'),
-        ('winter_clear', 'Czysta Zima'),
-        ('winter_deep', 'Głęboka Zima'),
-    ]
+    ('spring_light', 'Light Spring'),
+    ('spring_warm', 'Warm Spring'),
+    ('spring_clear', 'Clear Spring'),
+    ('summer_light', 'Light Summer'),
+    ('summer_cool', 'Cool Summer'),
+    ('summer_soft', 'Soft Summer'),
+    ('autumn_soft', 'Soft Autumn'),
+    ('autumn_warm', 'Warm Autumn'),
+    ('autumn_deep', 'Deep Autumn'),
+    ('winter_cool', 'Cool Winter'),
+    ('winter_clear', 'Clear Winter'),
+    ('winter_deep', 'Deep Winter'),
+]
+
     nazwa = models.CharField(max_length=50, choices=SEZONY, unique=True)
     opis = models.TextField()
     dominujaca_tonacja = models.CharField(max_length=20)
@@ -65,9 +66,9 @@ class Analiza(models.Model):
 
 class ProfilUzytkownika(models.Model):
     PLEC_CHOICES = [
-        ('K', 'Kobieta'),
-        ('M', 'Mężczyzna'),
-        ('N', 'Nie podano'),
+        ('K', 'Female'),
+        ('M', 'Male'),
+        ('N', 'Not defined'),
     ]
     uzytkownik = models.OneToOneField(User, on_delete=models.CASCADE)
     wiek = models.IntegerField(null=True, blank=True)

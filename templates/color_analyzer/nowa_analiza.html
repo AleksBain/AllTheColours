@@ -18,7 +18,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="text-center mb-4">
-                <h1 class="display-5 fw-bold text-primary">New Color Analysis</h1>
+                <h1 class="display-5 text-muted">New Color Analysis</h1>
                 <p class="lead text-muted">Upload photos to analyze your color type</p>
             </div>
 
@@ -38,7 +38,7 @@
                 <div class="form-section">
                     <h3 class="section-title">
                         <i class="fas fa-hand-paper me-2"></i>
-                        {{ form.zdjecie_nadgarstka.label }}
+                        Wrist Photo
                     </h3>
                     <div class="upload-section" data-field="zdjecie_nadgarstka">
                         <div class="upload-icon">
@@ -80,7 +80,7 @@
                 <div class="form-section">
                     <h3 class="section-title">
                         <i class="fas fa-eye me-2"></i>
-                        {{ form.zdjecie_oczu.label }}
+                        Eye Photo
                     </h3>
                     <div class="upload-section" data-field="zdjecie_oczu">
                         <div class="upload-icon">
@@ -121,7 +121,7 @@
                 <div class="form-section">
                     <h3 class="section-title">
                         <i class="fas fa-cut me-2"></i>
-                        {{ form.zdjecie_wlosow.label }}
+                        Hair Photo
                     </h3>
                     <div class="upload-section" data-field="zdjecie_wlosow">
                         <div class="upload-icon">
@@ -160,11 +160,11 @@
 
                 <!-- Buttons -->
                 <div class="form-section text-center">
-                    <button type="submit" class="btn btn-primary btn-lg me-3">
+                    <button type="submit" class="btn-artnouveau btn-lg me-3">
                         <i class="fas fa-paper-plane me-2"></i>
                         Send for analysis
                     </button>
-                    <a href="{% url 'color_analyzer:historia_analiz' %}" class="btn btn-secondary btn-lg">
+                    <a href="{% url 'color_analyzer:historia_analiz' %}" class="btn-artnouveau btn-lg">
                         <i class="fas fa-history me-2"></i>
                         Analysis History
                     </a>

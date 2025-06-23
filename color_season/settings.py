@@ -153,6 +153,8 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'
+
 
 # Ensure CSRF and session cookies are sent securely
 CSRF_COOKIE_SECURE = True

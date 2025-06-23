@@ -1,0 +1,197 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Palette Nouveau - Color Type Analysis</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+  <!-- Bootstrap + Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- CircleType for curved text -->
+  <script src="https://cdn.jsdelivr.net/gh/peterhry/CircleType@2.3.1/dist/circletype.min.js"></script>
+<style>
+ /* === NAVIGATION RIBBON CONTAINER === */
+.ribbon-navbar {
+  display: flex;                   /* Arrange children horizontally */
+  justify-content: space-between; /* Spread left, center, right sections */
+  align-items: center;             /* Vertically center items */
+  
+  background-image: url("/static/images/streched-ribbon.svg"); /* Decorative background */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 90% 100%;       /* Almost full width, full height */
+  
+  height: 180px;                   /* Fixed navbar height */
+  padding: 0 60px;                 /* Horizontal padding inside navbar */
+  width: 100%;                    /* Full width of the viewport/container */
+  box-sizing: border-box;          /* Include padding in width calculation */
+  
+  position: relative;              /* For absolute positioning inside */
+  z-index: 100;                   /* Stay on top of other elements */
+  
+  background-color: var(--background);
+  border-radius: var(--radius);
+  margin-top: 20px;               /* Space above navbar - adjust as needed */
+}
+
+/* === TITLE LINK STYLES === */
+.ribbon-title a {
+  color: var(--main-color);
+  text-decoration: none;           /* Remove underline */
+}
+.ribbon-title a:hover {
+  color: var(--accent-color);      /* Color on hover */
+}
+.ribbon-title a:visited {
+  color: var(--main-color);        /* Color for visited links */
+}
+
+/* === TITLE CONTAINER STYLES === */
+.ribbon-title {
+  position: absolute;              /* Position relative to navbar */
+  left: 50%;                      /* Center horizontally */
+  transform: translateX(-50%);     /* Adjust center precisely */
+  
+  font-family: var(--font-fancy); /* Decorative font */
+  font-size: 42px;                /* Large font size */
+  color: var(--main-color);
+  text-align: center;
+  
+  white-space: nowrap;             /* Prevent title from wrapping */
+  user-select: none;               /* Disable text selection */
+  margin-top: -70px;
+}
+
+/* === CONTAINERS FOR LEFT AND RIGHT NAV BUTTONS === */
+.ribbon-left{
+   display: flex;               /* Horizontal layout */
+  gap: 20px;                     /* Space between buttons */
+  align-items: center;            /* Vertically center buttons */
+  flex: 0 0 auto;                 /* Prevent growing/shrinking */
+  margin-left: 400px ;
+  margin-top: 50px;
+}
+.ribbon-right {
+  display: flex;                  /* Horizontal layout */
+  gap: 20px;                     /* Space between buttons */
+  align-items: center;            /* Vertically center buttons */
+  flex: 0 0 auto;                 /* Prevent growing/shrinking */
+  margin-right: 650px ;
+  margin-top: 50px;
+}
+
+/* === NAVIGATION BUTTONS === */
+.ribbon-btn {
+  padding: 10px 20px;
+  font-size: 20px;
+  font-family: var(--font-body);
+  
+  color: var(--text-dark);
+  text-decoration: none;           /* Remove underline */
+  
+  transition: all 0.3s ease;       /* Smooth hover effects */
+  
+  border-radius: 8px;              /* Rounded corners */
+  background-color: transparent;  /* Transparent background by default */
+  border: var(--border-width) solid transparent; /* Invisible border for layout stability */
+ 
+}
+
+/* === NAV BUTTON HOVER EFFECTS === */
+.ribbon-btn:hover {
+  color: var(--accent-color);
+  transform: scale(1.05);          /* Slightly enlarge button */
+      /* Show border on hover */
+}
+
+/* === RESPONSIVE STYLES FOR TABLETS AND SMALLER SCREENS === */
+@media (max-width: 992px) {
+  .ribbon-navbar {
+    flex-direction: column;         /* Stack sections vertically */
+    height: auto;                   /* Let height adjust automatically */
+    padding: 20px;
+    background-size: cover;         /* Adjust background scaling */
+    text-align: center;             /* Center content text */
+  }
+
+  .ribbon-left,
+  .ribbon-right {
+    justify-content: center;        /* Center nav buttons */
+    flex-wrap: wrap;                /* Wrap buttons if needed */
+    margin-bottom: 10px;            /* Space below button groups */
+  }
+
+  .ribbon-title {
+    position: static;               /* Remove absolute positioning */
+    transform: none;               /* Remove translateX */
+    margin: -100px 90px;            /* Adjust vertical and horizontal spacing */
+    font-size: 30px;               /* Smaller font size on small screens */
+  }
+
+  /* Title links styling remains consistent */
+  .ribbon-title a {
+    color: var(--main-color);
+    text-decoration: none;
+  }
+
+  .ribbon-title a:hover {
+    color: var(--accent-color);
+  }
+
+  .ribbon-title a:visited {
+    color: var(--main-color);
+  }
+
+  /* Slightly smaller nav buttons on small screens */
+  .ribbon-btn {
+    font-size: 18px;
+  }
+}
+</style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="ribbon-navbar">
+    <div class="ribbon-left">
+      <a class="ribbon-btn" href="{% url 'color_analyzer:historia_analiz' %}">History</a>
+      <a class="ribbon-btn" href="{% url 'color_analyzer:typy_kolorystyczne' %}">Color Types</a>
+      <a class="ribbon-btn" href="{% url 'color_analyzer:nowa_analiza' %}">New Analysis</a>
+    </div>
+
+    <div class="ribbon-title">
+      <a href="{% url 'color_analyzer:strona_glowna' %}" class="brand-link">
+        <span id="ribbon">Palette Nouveau</span>
+      </a>
+    </div>
+
+    <div class="ribbon-right">
+  {% if user.is_authenticated %}
+    <a class="ribbon-btn" href="{% url 'color_analyzer:profil' %}">Profile</a>
+    <a class="ribbon-btn" href="{% url 'color_analyzer:logout' %}">Log Out</a>
+  {% else %}
+    <a class="ribbon-btn" href="{% url 'color_analyzer:login' %}">Login</a>
+    <a class="ribbon-btn" href="{% url 'color_analyzer:rejestracja' %}">Register</a>
+  {% endif %}
+</div>
+  </nav>
+
+  <script>
+    window.addEventListener("load", function () {
+      const ribbonElement = document.getElementById("ribbon");
+      if (ribbonElement && typeof CircleType !== "undefined") {
+        try {
+          new CircleType(ribbonElement).radius(1800);
+        } catch (error) {
+          console.error("CircleType error:", error);
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

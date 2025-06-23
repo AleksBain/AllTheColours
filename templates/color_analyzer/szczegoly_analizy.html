@@ -1,28 +1,297 @@
 {% extends "base.html" %}
 {% block title %}Analysis Details{% endblock %}
 {% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #f9f6f1 0%, #e9e3d6 100%);
+        font-family: "Teutonic", serif;
+        color: #4a4a3f;
+    }
+
+    .analysis-container {
+        background: #fefbf6;
+        border: 3px double #b9a77c;
+        border-radius: 25px;
+        padding: 3rem 2.5rem;
+        box-shadow:
+            0 10px 25px rgba(185, 167, 124, 0.25),
+            inset 0 0 20px rgba(255, 252, 240, 0.9);
+        max-width: 900px;
+        margin: 2rem auto;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Delikatne ozdobne ramki narożne */
+    .analysis-container::before,
+    .analysis-container::after {
+        content: '';
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        border: 3px double #b9a77c;
+        border-radius: 50% 0 50% 0;
+        top: -15px;
+        left: -15px;
+        box-shadow: 2px 2px 6px rgba(185, 167, 124, 0.4);
+        pointer-events: none;
+        z-index: 0;
+    }
+    .analysis-container::after {
+        border-radius: 0 50% 0 50%;
+        top: auto;
+        bottom: -15px;
+        left: auto;
+        right: -15px;
+    }
+
+    /* Tytuł - font FloralCapsNouveau */
+    .analysis-title {
+        font-family: "FloralCapsNouveau", cursive;
+        font-size: 3rem;
+        color: #a88c4c;
+        text-align: center;
+        margin-bottom: 2rem;
+        text-shadow: 1px 1px 2px rgba(168, 140, 76, 0.5);
+        letter-spacing: 2px;
+    }
+
+    /* Szczegóły - font FantaisieArtistique */
+    .analysis-details {
+        background: #fffaf1;
+        border: 1.5px solid #d4c89b;
+        border-radius: 20px;
+        padding: 2rem 2.5rem;
+        box-shadow: 0 5px 15px rgba(185, 167, 124, 0.1);
+        font-family: "FantaisieArtistique", serif;
+        color: #6f6a4a;
+        font-size: 1.2rem;
+        line-height: 1.5;
+    }
+
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem 0;
+        border-bottom: 1px solid #ede7c8;
+    }
+    .detail-item:last-child {
+        border-bottom: none;
+    }
+
+    .detail-label {
+        font-weight: 700;
+        font-style: italic;
+        color: #9e8e54;
+        letter-spacing: 0.06em;
+    }
+
+    .detail-value {
+        font-weight: 600;
+        color: #8a7c45;
+    }
+
+    /* Kontener wykresu */
+    .chart-container {
+        background: #fffaf1;
+        border: 1.5px solid #d4c89b;
+        border-radius: 20px;
+        padding: 2.5rem 2rem;
+        margin-top: 3rem;
+        box-shadow: 0 5px 20px rgba(185, 167, 124, 0.12);
+        font-family: "FantaisieArtistique", serif;
+        color: #6f6a4a;
+    }
+
+    .chart-container h4 {
+        font-family: "FloralCapsNouveau", cursive;
+        font-size: 2.4rem;
+        text-align: center;
+        color: #a88c4c;
+        margin-bottom: 1.8rem;
+        letter-spacing: 1.5px;
+    }
+
+    /* Przycisk art nouveau */
+    .btn-medieval {
+        background: linear-gradient(145deg, #d8c892, #fff9e5);
+        border: 3px double #a88c4c;
+        color: #7a6a35;
+        padding: 12px 32px;
+        font-family: "FantaisieArtistique", serif;
+        font-weight: 700;
+        font-size: 1.15rem;
+        border-radius: 50px;
+        box-shadow: 0 5px 18px rgba(168, 140, 76, 0.35);
+        text-transform: none;
+        letter-spacing: 0.07em;
+        transition: all 0.4s ease;
+        cursor: pointer;
+        display: inline-block;
+        text-align: center;
+        user-select: none;
+        text-decoration: none;
+    }
+
+    .btn-medieval:hover {
+        background: linear-gradient(145deg, #fff9e5, #d8c892);
+        color: #5c4e22;
+        border-color: #7a6a35;
+        box-shadow: 0 8px 28px rgba(168, 140, 76, 0.6);
+        transform: translateY(-3px) scale(1.05);
+        text-decoration: none;
+    }
+</style>
+
 <div class="container mt-5">
-    <h2>Analysis Details</h2>
-    <ul>
-        <li>Status: {{ analiza.get_status_display }}</li>
-        <li>Color Type: {{ analiza.typ_kolorystyczny }}</li>
-        <li>Skin Tone: {{ analiza.tonacja_skory }}</li>
-        <li>Contrast: {{ analiza.kontrast_poziom }}</li>
-        <li>Saturation: {{ analiza.nasycenie_poziom }}</li>
-        <li>Confidence Level: {{ analiza.pewnosc_wyniku }}</li>
-    </ul>
-    <a href="{% url 'color_analyzer:historia_analiz' %}" class="btn btn-secondary">Back to History</a>
+    <div class="analysis-container">
+        <h2 class="analysis-title">Color Analysis Results</h2>
+        
+        <div class="analysis-details">
+            <div class="detail-item">
+                <span class="detail-label">Status:</span>
+                <span class="detail-value">{{ analiza.get_status_display }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Color Type:</span>
+                <span class="detail-value">{{ analiza.typ_kolorystyczny|default:"Not determined" }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Skin Tone:</span>
+                <span class="detail-value">{{ analiza.tonacja_skory|default:"Unknown" }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Contrast Level:</span>
+                <span class="detail-value">{{ analiza.kontrast_poziom|default:"N/A" }}/10</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Saturation Level:</span>
+                <span class="detail-value">{{ analiza.nasycenie_poziom|default:"N/A" }}/10</span>
+            </div>
+            
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'color_analyzer:historia_analiz' %}" class="btn-medieval">Return to History</a>
+        </div>
+    </div>
+    
+    <div class="chart-container">
+        <h4>Dominant Color Analysis</h4>
+        <div style="position: relative; height: 400px; width: 100%;">
+            <canvas id="colorChart"></canvas>
+        </div>
+        <div id="chartError" class="alert alert-warning" style="display: none;">
+            <strong>Chart Error:</strong> Unable to load color analysis data.
+        </div>
+    </div>
 </div>
 
-<!-- Confetti -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script>
-    window.addEventListener('load', function () {
+document.addEventListener("DOMContentLoaded", function () {
+    setTimeout(function() {
         confetti({
             particleCount: 150,
             spread: 90,
-            origin: { y: 0.6 }
+            origin: { y: 0.6 },
+            colors: ['#a88c4c', '#d8c892', '#e9e3d6', '#7a6a35', '#b9a77c']
         });
-    });
+    }, 500);
+    
+    const chartCanvas = document.getElementById('colorChart');
+    const chartError = document.getElementById('chartError');
+    
+    if (!chartCanvas) {
+        console.error('Chart canvas not found');
+        return;
+    }
+    
+    fetch("{% url 'color_analyzer:wykres_kolorow' pk=analiza.pk %}")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            
+            chartError.style.display = 'none';
+            
+            const ctx = chartCanvas.getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: data.labels || ['Skin', 'Eyes', 'Hair'],
+                    datasets: [{
+                        label: 'Dominant Colors',
+                        data: data.values || [33, 33, 34],
+                        backgroundColor: data.colors || ['#d8c892', '#a88c4c', '#7a6a35'],
+                        borderColor: '#fff',
+                        borderWidth: 3,
+                        hoverBorderWidth: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    family: "FantaisieArtistique, serif",
+                                    size: 14,
+                                    weight: '700'
+                                },
+                                color: '#4a4a3f',
+                                padding: 20
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Skin • Eyes • Hair',
+                            font: {
+                                family: "FantaisieArtistique, serif",
+                                size: 18,
+                                weight: '700'
+                            },
+                            color: '#4a4a3f',
+                            padding: {
+                                top: 10,
+                                bottom: 30
+                            }
+                        },
+                        tooltip: {
+                            titleFont: {
+                                family: "FantaisieArtistique, serif",
+                                size: 14,
+                                weight: '700'
+                            },
+                            bodyFont: {
+                                family: "FantaisieArtistique, serif",
+                                size: 12
+                            }
+                        }
+                    },
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true,
+                        duration: 2000
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error loading chart:', error);
+            chartError.style.display = 'block';
+            chartError.innerHTML = `<strong>Chart Error:</strong> ${error.message}`;
+        });
+});
 </script>
+
 {% endblock %}

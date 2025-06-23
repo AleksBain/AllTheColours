@@ -12,7 +12,8 @@ urlpatterns = [
     path('rejestracja/', views.rejestracja, name='rejestracja'),
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    
+    path('profil/', views.profil_uzytkownika, name='profil'),
+
     
    
     path('nowa-analiza/', views.nowa_analiza, name='nowa_analiza'),
@@ -22,8 +23,6 @@ urlpatterns = [
     
     
     
-    path('eksport/csv/', views.eksport_csv, name='eksport_csv'),
-    
     
     path('typy/', views.typy_kolorystyczne, name='typy_kolorystyczne'),
     path('typ/<int:pk>/', views.szczegoly_typu, name='szczegoly_typu'),
@@ -32,7 +31,7 @@ urlpatterns = [
     path('profil/', views.profil_uzytkownika, name='profil_uzytkownika'),
     
     
-    path('api/kontrast-slider/', views.api_kontrast_slider, name='api_kontrast_slider'),
+    
 ]
 
 

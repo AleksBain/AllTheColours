@@ -2,159 +2,161 @@
 {% block title %}Analysis History{% endblock %}
 {% block content %}
 <div class="container mt-5">
-<h2 class="mb-4">Your Color Analyses</h2>
+  <h2 class="mb-4">Your Color Analyses</h2>
 
-<!-- Filtering and sorting form -->
-<form method="get" class="row g-3 mb-4">
-    <div class="col-md-3">
-        {{ form.typ_kolorystyczny.label_tag }}
-        {{ form.typ_kolorystyczny }}
-    </div>
-    <div class="col-md-2">
-        {{ form.data_od.label_tag }}
-        {{ form.data_od }}
-    </div>
-    <div class="col-md-2">
-        {{ form.data_do.label_tag }}
-        {{ form.data_do }}
-    </div>
-    <div class="col-md-2">
-        <label for="id_sortowanie" class="form-label">Sort by</label>
-        <select name="sortowanie" class="form-select" id="id_sortowanie">
-            <option value="-data_utworzenia" {% if request.GET.sortowanie == '-data_utworzenia' or not request.GET.sortowanie %}selected{% endif %}>
-                Newest first
-            </option>
-            <option value="data_utworzenia" {% if request.GET.sortowanie == 'data_utworzenia' %}selected{% endif %}>
-                Oldest first
-            </option>
-            <option value="typ_kolorystyczny" {% if request.GET.sortowanie == 'typ_kolorystyczny' %}selected{% endif %}>
-                Color type A-Z
-            </option>
-            <option value="status" {% if request.GET.sortowanie == 'status' %}selected{% endif %}>
-                Status
-            </option>
-        </select>
-    </div>
-    <div class="col-md-2">
-        <label for="id_status" class="form-label">Status</label>
-        <select name="status" class="form-select" id="id_status">
-            <option value="">All</option>
-            <option value="pending" {% if request.GET.status == 'pending' %}selected{% endif %}>Pending</option>
-            <option value="completed" {% if request.GET.status == 'completed' %}selected{% endif %}>Completed</option>
-            <option value="draft" {% if request.GET.status == 'draft' %}selected{% endif %}>Draft</option>
-        </select>
-    </div>
-    <div class="col-md-1 d-flex align-items-end">
-        <button type="submit" class="btn btn-primary w-100">Filter</button>
-    </div>
-</form>
+  <!-- Filtering and sorting form -->
+  <form method="get" class="row g-3 mb-4">
+      <div class="col-md-3">
+          {{ form.typ_kolorystyczny.label_tag }} <!-- Assuming this label is already in English or you handle translation in forms -->
+          {{ form.typ_kolorystyczny }}
+      </div>
+      <div class="col-md-2">
+          {{ form.data_od.label_tag }}
+          {{ form.data_od }}
+      </div>
+      <div class="col-md-2">
+          {{ form.data_do.label_tag }}
+          {{ form.data_do }}
+      </div>
+      <div class="col-md-2">
+          <label for="id_sortowanie" class="form-label">Sort by</label>
+          <select name="sortowanie" class="form-select" id="id_sortowanie">
+              <option value="-data_utworzenia" {% if request.GET.sortowanie == '-data_utworzenia' or not request.GET.sortowanie %}selected{% endif %}>
+                  Newest first
+              </option>
+              <option value="data_utworzenia" {% if request.GET.sortowanie == 'data_utworzenia' %}selected{% endif %}>
+                  Oldest first
+              </option>
+              <option value="typ_kolorystyczny" {% if request.GET.sortowanie == 'typ_kolorystyczny' %}selected{% endif %}>
+                  Color Type A-Z
+              </option>
+              <option value="status" {% if request.GET.sortowanie == 'status' %}selected{% endif %}>
+                  Status
+              </option>
+          </select>
+      </div>
+      <div class="col-md-2">
+          <label for="id_status" class="form-label">Status</label>
+          <select name="status" class="form-select" id="id_status">
+              <option value="">All</option>
+              <option value="pending" {% if request.GET.status == 'pending' %}selected{% endif %}>Pending</option>
+              <option value="completed" {% if request.GET.status == 'completed' %}selected{% endif %}>Completed</option>
+              <option value="draft" {% if request.GET.status == 'draft' %}selected{% endif %}>Draft</option>
+          </select>
+      </div>
+      <div class="col-md-1 d-flex align-items-end">
+          <button type="submit" class="btn btn-artnouveau w-100">Filter</button>
+      </div>
+  </form>
 
-{% if page_obj.object_list %}
-    <!-- Statistics -->
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <div class="alert alert-light">
-                <strong>Found:</strong> {{ page_obj.paginator.count }} 
-                {% if page_obj.paginator.count == 1 %}analysis{% elif page_obj.paginator.count < 5 %}analyses{% else %}analyses{% endif %}
-            </div>
-        </div>
-    </div>
+  {% if page_obj.object_list %}
+      <!-- Statistics -->
+      <div class="row mb-4">
+          <div class="col-md-12">
+              <div class="alert alert-light">
+                  <strong>Found:</strong> {{ page_obj.paginator.count }} 
+                  {% if page_obj.paginator.count == 1 %}analysis{% else %}analyses{% endif %}
+              </div>
+          </div>
+      </div>
 
-    <div class="list-group mb-4">
-        {% for analiza in page_obj.object_list %}
-        <a href="{% url 'color_analyzer:szczegoly_analizy' pk=analiza.pk %}" 
-           class="list-group-item list-group-item-action">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">
-                    {{ analiza.typ_kolorystyczny.get_nazwa_display|default:"No type" }}
-                    <span class="badge bg-{% if analiza.status == 'completed' %}success{% elif analiza.status == 'pending' %}warning{% else %}secondary{% endif %} ms-2">
-                        {{ analiza.get_status_display }}
-                    </span>
-                </h5>
-                <small class="text-muted">{{ analiza.data_utworzenia|date:"d.m.Y H:i" }}</small>
-            </div>
-            
-            {% if analiza.tonacja_skory or analiza.kontrast_poziom or analiza.nasycenie_poziom %}
-            <p class="mb-1">
-                {% if analiza.tonacja_skory %}<span class="badge bg-light text-dark me-1">Tone: {{ analiza.tonacja_skory }}</span>{% endif %}
-                {% if analiza.kontrast_poziom %}<span class="badge bg-light text-dark me-1">Contrast: {{ analiza.kontrast_poziom }}</span>{% endif %}
-                {% if analiza.nasycenie_poziom %}<span class="badge bg-light text-dark me-1">Saturation: {{ analiza.nasycenie_poziom }}</span>{% endif %}
-            </p>
-            {% endif %}
-            
-            {% if analiza.notatki %}
-            <small class="text-muted">{{ analiza.notatki|truncatechars:100 }}</small>
-            {% endif %}
-        </a>
-        {% endfor %}
-    </div>
+      <div class="list-group mb-4">
+          {% for analiza in page_obj.object_list %}
+          <a href="{% url 'color_analyzer:szczegoly_analizy' pk=analiza.pk %}" 
+             class="list-group-item list-group-item-action">
+              <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">
+                      {{ analiza.typ_kolorystyczny.get_nazwa_display|default:"No type" }}
+                      <span class="badge bg-{% if analiza.status == 'completed' %}success{% elif analiza.status == 'pending' %}warning{% else %}secondary{% endif %} ms-2">
+                          {{ analiza.get_status_display }}
+                      </span>
+                  </h5>
+                  <small class="text-muted">{{ analiza.data_utworzenia|date:"d.m.Y H:i" }}</small>
+              </div>
+              
+              {% if analiza.tonacja_skory or analiza.kontrast_poziom or analiza.nasycenie_poziom %}
+              <p class="mb-1">
+                  {% if analiza.tonacja_skory %}<span class="badge bg-light text-dark me-1">Tone: {{ analiza.tonacja_skory }}</span>{% endif %}
+                  {% if analiza.kontrast_poziom %}<span class="badge bg-light text-dark me-1">Contrast: {{ analiza.kontrast_poziom }}</span>{% endif %}
+                  {% if analiza.nasycenie_poziom %}<span class="badge bg-light text-dark me-1">Saturation: {{ analiza.nasycenie_poziom }}</span>{% endif %}
+              </p>
+              {% endif %}
+              
+              {% if analiza.notatki %}
+              <small class="text-muted">{{ analiza.notatki|truncatechars:100 }}</small>
+              {% endif %}
+          </a>
+          {% endfor %}
+      </div>
 
-    <!-- Pagination -->
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
-            {% for page_num in page_obj.paginator.page_range %}
-                {% if page_num == page_obj.number %}
-                    <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
-                {% elif page_num > page_obj.number|add:'-3' and page_num < page_obj.number|add:'3' %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ page_num }}</a>
-                    </li>
-                {% endif %}
-            {% endfor %}
-            {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
-                    <span aria-hidden="true">&laquo;</span> Previous
-                </a>
-            </li>
-            {% else %}
-            <li class="page-item disabled">
-                <span class="page-link"><span aria-hidden="true">&laquo;</span> Previous</span>
-            </li>
-            {% endif %}
-            {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
-                    Next <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-            {% else %}
-            <li class="page-item disabled">
-                <span class="page-link">Next <span aria-hidden="true">&raquo;</span></span>
-            </li>
-            {% endif %}
-        </ul>
-    </nav>
+      <!-- Pagination -->
+      <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+              {% if page_obj.has_previous %}
+              <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                      <span aria-hidden="true">&laquo;</span> Previous
+                  </a>
+              </li>
+              {% else %}
+              <li class="page-item disabled">
+                  <span class="page-link"><span aria-hidden="true">&laquo;</span> Previous</span>
+              </li>
+              {% endif %}
 
-    <!-- Page info -->
-    <div class="text-center text-muted small">
-        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-        ({{ page_obj.start_index }}–{{ page_obj.end_index }} of {{ page_obj.paginator.count }})
-    </div>
+              {% for page_num in page_obj.paginator.page_range %}
+                  {% if page_num == page_obj.number %}
+                      <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
+                  {% elif page_num > page_obj.number|add:'-3' and page_num < page_obj.number|add:'3' %}
+                      <li class="page-item">
+                          <a class="page-link" href="?page={{ page_num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ page_num }}</a>
+                      </li>
+                  {% endif %}
+              {% endfor %}
 
-{% else %}
-    <div class="alert alert-info text-center">
-        <h4>You don't have any analyses yet</h4>
-        <p class="mb-3">Start your first color analysis!</p>
-        <a href="{% url 'color_analyzer:nowa_analiza' %}" class="btn btn-primary">
-            Start Analysis
-        </a>
-    </div>
-{% endif %}
+              {% if page_obj.has_next %}
+              <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                      Next <span aria-hidden="true">&raquo;</span>
+                  </a>
+              </li>
+              {% else %}
+              <li class="page-item disabled">
+                  <span class="page-link">Next <span aria-hidden="true">&raquo;</span></span>
+              </li>
+              {% endif %}
+          </ul>
+      </nav>
 
-<!-- Quick actions -->
-<div class="row mt-4">
-    <div class="col-md-12 text-center">
-        <a href="{% url 'color_analyzer:nowa_analiza' %}" class="btn btn-success me-2">
-            <i class="fas fa-plus"></i> New Analysis
-        </a>
-        {% if page_obj.object_list %}
-        <a href="?export=csv{% for key, value in request.GET.items %}{% if key != 'page' and key != 'export' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="btn btn-outline-secondary">
-            <i class="fas fa-download"></i> Export to CSV
-        </a>
-        {% endif %}
-    </div>
-</div>
+      <!-- Page info -->
+      <div class="text-center text-muted small">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+          ({{ page_obj.start_index }}–{{ page_obj.end_index }} of {{ page_obj.paginator.count }})
+      </div>
+
+  {% else %}
+      <div class="alert alert-info text-center">
+          <h4>You don't have any analyses yet</h4>
+          <p class="mb-3">Start your first color analysis!</p>
+          <a href="{% url 'color_analyzer:nowa_analiza' %}" class="btn btn-artnouveau">
+              Start Analysis
+          </a>
+      </div>
+  {% endif %}
+
+  <!-- Quick actions -->
+  <div class="row mt-4">
+      <div class="col-md-12 text-center">
+          <a href="{% url 'color_analyzer:nowa_analiza' %}" class="btn btn-artnouveau me-2">
+              <i class="fas fa-plus"></i> New Analysis
+          </a>
+          {% if page_obj.object_list %}
+          <a href="?export=csv{% for key, value in request.GET.items %}{% if key != 'page' and key != 'export' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="btn btn-outline-secondary btn-artnouveau">
+              <i class="fas fa-download"></i> Export to CSV
+          </a>
+          {% endif %}
+      </div>
+  </div>
 
 </div>
 {% endblock %}
